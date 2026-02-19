@@ -1,0 +1,1 @@
+This is what https://merithunter.heyitzwerty.workers.dev/ uses. This contains everything the site runs, to keep it open and available to read over for people who are "safety" first. Changes made this directory will automatically apply to the active page - So please input is welcome!
