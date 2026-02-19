@@ -3,48 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torn Merit Hunter | Smart Tracker</title>
+    <title>Torn Merit Hunter | Tactical Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Gritty Dossier Background */
         body { background-color: #161616; background-image: url('https://www.transparenttextures.com/patterns/stardust.png'); color: #ccc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Cyberpunk Neon Hover Effects merged with Dossier base */
-        .torn-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background-color: #1a1a1a; }
-        .torn-card:hover { transform: translateY(-4px) scale(1.02); z-index: 10; background-color: #1e1e1e; }
+        .torn-card { transition: all 0.2s ease; background-color: #1a1a1a; }
+        .torn-card:hover { transform: translateY(-2px); z-index: 10; background-color: #1e1e1e; }
         
-        .diff-1 { color: #4ade80; border-color: #333; }
-        .diff-1:hover { border-color: #4ade80; box-shadow: 0 0 15px rgba(74, 222, 128, 0.2); }
-        
-        .diff-2, .diff-3 { color: #a3e635; border-color: #333; }
-        .diff-2:hover, .diff-3:hover { border-color: #a3e635; box-shadow: 0 0 15px rgba(163, 230, 53, 0.2); }
-        
-        .diff-4, .diff-5 { color: #fbbf24; border-color: #333; }
-        .diff-4:hover, .diff-5:hover { border-color: #fbbf24; box-shadow: 0 0 15px rgba(251, 191, 36, 0.2); }
-        
-        .diff-6, .diff-7 { color: #f97316; border-color: #333; }
-        .diff-6:hover, .diff-7:hover { border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
-        
-        .diff-8, .diff-9, .diff-10 { color: #ef4444; border-color: #333; }
-        .diff-8:hover, .diff-9:hover, .diff-10:hover { border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
+        /* Difficulty Color Mapping */
+        .diff-1, .diff-2 { color: #4ade80; border-color: #333; }
+        .diff-3, .diff-4 { color: #a3e635; border-color: #333; }
+        .diff-5, .diff-6 { color: #fbbf24; border-color: #333; }
+        .diff-7, .diff-8 { color: #f97316; border-color: #333; }
+        .diff-9, .diff-10 { color: #ef4444; border-color: #333; }
+
+        .diff-1:hover, .diff-2:hover { border-color: #4ade80; box-shadow: 0 0 10px rgba(74, 222, 128, 0.1); }
+        .diff-3:hover, .diff-4:hover { border-color: #a3e635; box-shadow: 0 0 10px rgba(163, 230, 53, 0.1); }
+        .diff-5:hover, .diff-6:hover { border-color: #fbbf24; box-shadow: 0 0 10px rgba(251, 191, 36, 0.1); }
+        .diff-7:hover, .diff-8:hover { border-color: #f97316; box-shadow: 0 0 10px rgba(249, 115, 22, 0.1); }
+        .diff-9:hover, .diff-10:hover { border-color: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.1); }
 
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #111; }
         ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px;}
         ::-webkit-scrollbar-thumb:hover { background: #666; }
         
-        /* Updated Loader Colors */
         .loader { border: 3px solid #333; border-top: 3px solid #888; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .tooltip-text {
-            visibility: hidden; width: 280px; background-color: #000; color: #fff; text-align: left;
-            border-radius: 6px; padding: 10px; position: absolute; z-index: 20; top: 100%; left: 50%;
-            margin-left: -140px; margin-top: 8px; opacity: 0; transition: opacity 0.3s;
-            border: 1px solid #333; font-size: 0.85rem; line-height: 1.4; box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-        }
-        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
-        .tooltip-text::after { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: transparent transparent #000 transparent; }
+        /* Custom Number Input Hiding */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen">
@@ -52,24 +43,9 @@
     <div class="max-w-6xl mx-auto">
         <header class="mb-8 text-center relative border-b border-[#333] pb-8">
             <h1 class="text-5xl font-extrabold text-white mb-1 tracking-tight"><span class="text-[#888]">MERIT</span> HUNTER</h1>
-            
             <p class="text-sm text-gray-500 mb-2">
                 Made by <a href="https://www.torn.com/profiles.php?XID=3626448" target="_blank" class="text-[#aaa] hover:text-white transition-colors font-bold">HeyItzWerty [3626448]</a>
             </p>
-
-            <div class="tooltip-container relative inline-block cursor-help group">
-                <span class="text-xs text-gray-400 border-b border-dotted border-gray-500">How does this work?</span>
-                <div class="tooltip-text">
-                    <strong class="block text-[#ccc] mb-1">Privacy & Security First</strong>
-                    This tool runs entirely in your browser using Javascript. 
-                    <br><br>
-                    • No data is sent to any external server.<br>
-                    • Your API Key is used only to fetch data directly from Torn.<br>
-                    • All processing happens locally on your device.<br>
-                    <br>
-                    It scans your current achievements against the global list to find the easiest merits you haven't earned yet.
-                </div>
-            </div>
         </header>
 
         <div class="mb-8 border border-[#333] bg-[#111] p-6 rounded shadow-lg">
@@ -79,562 +55,710 @@
                     <input type="password" id="api-key" class="w-full h-12 bg-[#1a1a1a] border border-[#444] text-white px-4 focus:outline-none focus:border-[#888] transition-colors rounded" placeholder="Enter Limited API Key">
                 </div>
                 <button onclick="fetchMerits()" id="fetch-btn" class="w-full md:w-auto h-12 bg-[#222] hover:bg-[#333] border border-[#444] hover:border-[#666] text-white font-bold px-8 transition-colors uppercase text-sm rounded shadow-md">
-                    Scan Merits
+                    Initialize Scan
                 </button>
             </div>
 
-            <div id="filters-area" class="hidden pt-4 border-t border-[#333] grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div id="filters-area" class="hidden pt-4 border-t border-[#333] grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-xs text-gray-500 mb-1 font-bold uppercase">Category</label>
-                    <select id="cat-filter" onchange="renderMerits()" class="w-full bg-[#1a1a1a] text-sm text-white p-2.5 border border-[#444] outline-none rounded">
-                        <option value="all">All Categories</option>
+                    <label class="block text-[10px] text-gray-500 mb-1 font-bold uppercase">Classification</label>
+                    <select id="cat-filter" onchange="renderMerits()" class="w-full bg-[#1a1a1a] text-xs text-white p-2.5 border border-[#444] outline-none rounded">
+                        <option value="all">All Data</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-500 mb-1 font-bold uppercase">Sort By</label>
-                    <select id="sort-filter" onchange="renderMerits()" class="w-full bg-[#1a1a1a] text-sm text-white p-2.5 border border-[#444] outline-none rounded">
-                        <option value="difficulty_asc">Difficulty (Easiest First)</option>
-                        <option value="difficulty_desc">Difficulty (Hardest First)</option>
-                        <option value="name">Name (A-Z)</option>
+                    <label class="block text-[10px] text-gray-500 mb-1 font-bold uppercase">Crime Filter</label>
+                    <select id="crime-filter" onchange="renderMerits()" class="w-full bg-[#1a1a1a] text-xs text-white p-2.5 border border-[#444] outline-none rounded">
+                        <option value="all">Show All Crimes</option>
+                        <option value="crime1">Crimes 1.0 Only</option>
+                        <option value="crime2">Crimes 2.0 Only</option>
+                        <option value="nocrime">Exclude All Crimes</option>
                     </select>
                 </div>
-                <div class="flex items-center pt-5 pl-2">
+                <div>
+                    <label class="block text-[10px] text-gray-500 mb-1 font-bold uppercase">Sort Protocol</label>
+                    <select id="sort-filter" onchange="renderMerits()" class="w-full bg-[#1a1a1a] text-xs text-white p-2.5 border border-[#444] outline-none rounded">
+                        <option value="difficulty_asc">Easiest First</option>
+                        <option value="difficulty_desc">Hardest First</option>
+                        <option value="name">Alphabetical</option>
+                    </select>
+                </div>
+                <div class="flex flex-col justify-end pb-2 gap-2 pl-2">
                     <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" id="hide-owned" checked onchange="renderMerits()" class="form-checkbox h-4 w-4 text-[#444] bg-[#1a1a1a] border-[#444] rounded focus:ring-0 focus:ring-offset-0">
-                        <span class="text-sm text-gray-400 group-hover:text-white font-bold transition-colors">Hide Owned Merits</span>
+                        <input type="checkbox" id="hide-owned" checked onchange="renderMerits()" class="form-checkbox h-4 w-4 text-[#444] bg-[#1a1a1a] border-[#444] rounded">
+                        <span class="text-xs text-gray-400 group-hover:text-white font-bold uppercase transition-colors">Hide Owned</span>
+                    </label>
+                    <label class="flex items-center space-x-2 cursor-pointer group">
+                        <input type="checkbox" id="show-hidden" onchange="renderMerits()" class="form-checkbox h-4 w-4 text-[#444] bg-[#1a1a1a] border-[#444] rounded">
+                        <span class="text-xs text-gray-400 group-hover:text-white font-bold uppercase transition-colors">Show Hidden Merits</span>
                     </label>
                 </div>
             </div>
         </div>
 
-        <div id="stats-bar" class="hidden mb-6 flex justify-between text-sm text-gray-500 px-2 font-bold uppercase">
-            <span id="total-count">0 Merits Found</span>
-            <span id="completion-rate">0 Remaining</span>
+        <div id="stats-bar" class="hidden mb-6 flex justify-between text-xs text-gray-500 px-2 font-bold uppercase tracking-wider">
+            <span id="total-count">0 Targets</span>
+            <span id="completion-rate">0 Pending</span>
         </div>
 
         <div id="loader" class="hidden py-10 border border-[#333] bg-[#111] rounded">
             <div class="loader"></div>
-            <p class="text-center text-gray-500 text-sm mt-4 font-bold">Loading Data from Torn...</p>
+            <p class="text-center text-gray-500 text-sm mt-4 font-bold">Gathering info from Torn...</p>
         </div>
 
         <div id="merit-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
         
         <div id="empty-state" class="hidden text-center py-20 border border-[#333] bg-[#111] rounded">
-            <div class="text-6xl mb-4">🎉</div>
-            <h3 class="text-2xl font-bold text-white mb-2">All Clean!</h3>
-            <p class="text-gray-500 text-sm">You've achieved all merits matching these filters.</p>
+            <div class="text-4xl mb-4 text-[#444]">///</div>
+            <h3 class="text-xl font-bold text-white mb-2 uppercase">Zero Matches</h3>
+            <p class="text-gray-500 text-xs uppercase">No targets found matching current filters.</p>
         </div>
     </div>
 
     <script>
-        const HONOR_BARS = {
-            "1337": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d5/608.png/400px-608.png",
-            "Various": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/190.png/400px-190.png",
-            "Default": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/169.png/400px-169.png",
-            "Standard": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f8/168.png/400px-168.png",
-            "Philistine": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e0/857.png/400px-857.png",
-            "Biccy": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/10/858.png/400px-858.png",
-            "787thWarDog": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/64/859.png/400px-859.png",
-            "Chainer 1": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/06/253.png/400px-253.png",
-            "Chainer 2": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/255.png/400px-255.png",
-            "Chainer 3": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/257.png/400px-257.png",
-            "Chainer 4": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c4/475.png/400px-475.png",
-            "Chainer 5": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/73/476.png/400px-476.png",
-            "Carnage": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/256.png/400px-256.png",
-            "Massacre": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/477.png/400px-477.png",
-            "Genocide": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/478.png/400px-478.png",
-            "Chain Saver": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/66/916.png/400px-916.png",
-            "Strongest Link": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/98/641.png/400px-641.png",
-            "2800 Ft/S": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/db/146.png/400px-146.png",
-            "Act of Faith": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/51/148.png/400px-148.png",
-            "Axe Wound": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d3/142.png/400px-142.png",
-            "Cartridge Packer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a3/147.png/400px-147.png",
-            "Leonidas": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/21/871.png/400px-871.png",
-            "Lend A Hand": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/144.png/400px-144.png",
-            "Pin Puller": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7d/143.png/400px-143.png",
-            "Machinist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b9/28.png/400px-28.png",
-            "Slasher": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/150.png/400px-150.png",
-            "Stumped": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/67/141.png/400px-141.png",
-            "The Stabbist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d2/149.png/400px-149.png",
-            "Yours Says Replica...": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c7/145.png/400px-145.png",
-            "Unarmed": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/515.png/400px-515.png",
-            "Modded": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3f/491.png/400px-491.png",
-            "Specialist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f9/778.png/400px-778.png",
-            "Riddled": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/31/781.png/400px-781.png",
-            "War Machine": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/af/611.png/400px-611.png",
-            "Surplus": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cf/800.png/400px-800.png",
-            "Bandolier": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e4/793.png/400px-793.png",
-            "Quartermaster": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b0/791.png/400px-791.png",
-            "Maimed": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/82/942.png/400px-942.png",
-            "Dragon's Breath": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/dc/951.png/400px-951.png",
-            "Marked": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2b/945.png/400px-945.png",
-            "Scorched": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/944.png/400px-944.png",
-            "Penetrated": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5a/943.png/400px-943.png",
-            "Mod Boss": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6d/851.png/400px-851.png",
-            "Gone Fishing": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/99/902.png/400px-902.png",
-            "Kill Streaker 1": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d6/15.png/400px-15.png",
-            "Kill Streaker 2": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1e/16.png/400px-16.png",
-            "Kill Streaker 3": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c9/17.png/400px-17.png",
-            "Wham!": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/47/1004.png/400px-1004.png",
-            "Flatline": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/eb/254.png/400px-254.png",
-            "Sidekick": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/490.png/400px-490.png",
-            "Precision": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/07/20.png/400px-20.png",
-            "50cal": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/24/227.png/400px-227.png",
-            "Domino Effect": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/51/230.png/400px-230.png",
-            "Bounty Hunter": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f2/232.png/400px-232.png",
-            "Dead Or Alive": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/236.png/400px-236.png",
-            "Spray And Pray": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/140.png/400px-140.png",
-            "Two Halves Make A Hole": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/151.png/400px-151.png",
-            "Blood Money": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f3/247.png/400px-247.png",
-            "Deadlock": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ce/270.png/400px-270.png",
-            "Boom!": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/99/1001.png/400px-1001.png",
-            "Yoink": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e4/955.png/400px-955.png",
-            "007": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cf/228.png/400px-228.png",
-            "Self Defense": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/75/22.png/400px-22.png",
-            "Night Walker": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/27.png/400px-27.png",
-            "Guardian Angel": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/de/615.png/400px-615.png",
-            "Semper Fortis": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/481.png/400px-481.png",
-            "Manu Forti": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/32/627.png/400px-627.png",
-            "Vae Victis": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2c/631.png/400px-631.png",
-            "Survivalist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/be/500.png/400px-500.png",
-            "Bam!": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d3/1002.png/400px-1002.png",
-            "Double Dragon": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b9/639.png/400px-639.png",
-            "Pressure Point": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f5/517.png/400px-517.png",
-            "Fury": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/601.png/400px-601.png",
-            "Boss Fight": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b4/665.png/400px-665.png",
-            "Going Postal": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/71/896.png/400px-896.png",
-            "Friendly Fire": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a4/605.png/400px-605.png",
-            "Church Mouse": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a6/739.png/400px-739.png",
-            "Phoenix": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/02/317.png/400px-317.png",
-            "Devastation": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c7/740.png/400px-740.png",
-            "Obliteration": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1b/741.png/400px-741.png",
-            "Annihilation": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6e/786.png/400px-786.png",
-            "Kapow!": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/1003.png/400px-1003.png",
-            "Giant Slayer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/30/670.png/400px-670.png",
-            "Bare": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fc/763.png/400px-763.png",
-            "Vengeance": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/488.png/400px-488.png",
-            "Invictus": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5f/719.png/400px-719.png",
-            "Lead Salad": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/08/834.png/400px-834.png",
-            "Peppered": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5c/836.png/400px-836.png",
-            "Finale": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/828.png/400px-828.png",
-            "Deadly Duo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/51/827.png/400px-827.png",
-            "Lovestruck": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/21/838.png/400px-838.png",
-            "Hands Solo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bf/843.png/400px-843.png",
-            "Triple Tap": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/93/414.png/400px-414.png",
-            "Woodland Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/68/39.png/400px-39.png",
-            "Desert Storm Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4d/40.png/400px-40.png",
-            "Urban Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/41.png/400px-41.png",
-            "Arctic Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3d/42.png/400px-42.png",
-            "Fall Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1e/43.png/400px-43.png",
-            "Yellow Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8b/44.png/400px-44.png",
-            "Digital Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1f/45.png/400px-45.png",
-            "Red Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/46.png/400px-46.png",
-            "Blue Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/23/47.png/400px-47.png",
-            "Orange Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e7/48.png/400px-48.png",
-            "Pink Camo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/92/49.png/400px-49.png",
-            "Zebra Skin": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e1/50.png/400px-50.png",
-            "Leopard Skin": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2f/51.png/400px-51.png",
-            "Tiger Skin": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/85/52.png/400px-52.png",
-            "Lucky Break": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/16/276.png/400px-276.png",
-            "Jackpot": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ee/275.png/400px-275.png",
-            "Poker King": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c3/237.png/400px-237.png",
-            "Spinner": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1d/269.png/400px-269.png",
-            "Highs And Lows": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/50/326.png/400px-326.png",
-            "One In Six": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bc/327.png/400px-327.png",
-            "Daddy's New Shoes": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/513.png/400px-513.png",
-            "Foot Soldier": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/00/519.png/400px-519.png",
-            "Twenty-One": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/338.png/400px-338.png",
-            "Awesome": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/427.png/400px-427.png",
-            "Mediocre": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6e/437.png/400px-437.png",
-            "Lame": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/431.png/400px-431.png",
-            "Find A Penny Pick It Up": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/6.png/400px-6.png",
-            "Civil Offence": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/db/152.png/400px-152.png",
-            "Candy Man": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a9/25.png/400px-25.png",
-            "Smile, You're On Camera": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/49/157.png/400px-157.png",
-            "Smokin' Barrels": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/2.png/400px-2.png",
-            "Breaking And Entering": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5d/158.png/400px-158.png",
-            "Stroke Bringer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fc/154.png/400px-154.png",
-            "Escobar": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/05/153.png/400px-153.png",
-            "Bug": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/81/161.png/400px-161.png",
-            "We Have A Breach": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/155.png/400px-155.png",
-            "Professional": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e2/159.png/400px-159.png",
-            "Fire starter": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/24/24.png/400px-24.png",
-            "Joy Rider": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/20/160.png/400px-160.png",
-            "Society's Worst": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/81/251.png/400px-251.png",
-            "Mastermind": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/552.png/400px-552.png",
-            "Spoiled Rotten": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/70/1012.png/400px-1012.png",
-            "Pay Dirt": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ec/1014.png/400px-1014.png",
-            "Online Entrepreneur": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/da/1031.png/400px-1031.png",
-            "Box Office": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/10/1025.png/400px-1025.png",
-            "Fresh Blud": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/1032.png/400px-1032.png",
-            "Let Us Spray": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1c/1034.png/400px-1034.png",
-            "Notorious": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/1038.png/400px-1038.png",
-            "Retail Therapy": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/af/1029.png/400px-1029.png",
-            "Pig Rustler": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/49/1076.png/400px-1076.png",
-            "Pocketeer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/Pocketeer.png/400px-Pocketeer.png",
-            "Zero Liability": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/92/1054.png/400px-1054.png",
-            "King PIN": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/91/1053.png/400px-1053.png",
-            "Key to the City": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/676.png/400px-676.png",
-            "Overclocked": "https://torn-wiki-uploads.s3.amazonaws.com/a/af/1241.png",
-            "Breaking and Entering": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/1064.png/400px-1064.png",
-            "Tekkers": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/Tekkers.png/400px-Tekkers.png",
-            "Crowd Teaser": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3c/Crowd.png/400px-Crowd.png",
-            "Dissolving Agent": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/Disolve.png/400px-Disolve.png",
-            "Trash Bandit": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6e/Trash.png/400px-Trash.png",
-            "Character Assassination": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d8/Character.png/400px-Character.png",
-            "Cryptographer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f8/Crypto.png/400px-Crypto.png",
-            "Documented Success": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3e/1130.png/400px-1130.png",
-            "Assembly Line": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/1136.png/400px-1136.png",
-            "Decepticon": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/96/1166.png/400px-1166.png",
-            "Alpha Mail": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1b/1277.png/400px-1277.png",
-            "Shore Thing": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a0/1326.png/400px-1326.png",
-            "Cinephile": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e9/1028.png/400px-1028.png",
-            "Urban Legend": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7e/1271.png/400px-1271.png",
-            "Line of Credit": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4e/1229.png/400px-1229.png",
-            "Snake Oil": "https://torn-wiki-uploads.s3.amazonaws.com/a/a8/1284.png",
-            "Grift Horse": "https://torn-wiki-uploads.s3.amazonaws.com/6/64/1218.png",
-            "Papers Please": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/65/1243.png/400px-1243.png",
-            "Crown Jewel": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a6/328.png/400px-328.png",
-            "Slim Pickings": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/Slimpickings.png/400px-Slimpickings.png",
-            "Discovery": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1f/231.png/400px-231.png",
-            "RDD": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/156.png/400px-156.png",
-            "Slow Bomb": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7b/14.png/400px-14.png",
-            "Spaced Out": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/25/26.png/400px-26.png",
-            "Who's Frank?": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/50/29.png/400px-29.png",
-            "I Think I See Dead People": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0a/34.png/400px-34.png",
-            "Party Animal": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/30.png/400px-30.png",
-            "Acid Dream": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/16/32.png/400px-32.png",
-            "Painkiller": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/87/38.png/400px-38.png",
-            "Horse Tranquilizer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7d/31.png/400px-31.png",
-            "The Fields Of Opium": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9c/33.png/400px-33.png",
-            "Crank It Up": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c1/35.png/400px-35.png",
-            "Angel Dust": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bf/36.png/400px-36.png",
-            "Free Energy": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/87/37.png/400px-37.png",
-            "Biology Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2f/53.png/400px-53.png",
-            "Business Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d5/54.png/400px-54.png",
-            "Combat Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/55.png/400px-55.png",
-            "ICT Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/18/56.png/400px-56.png",
-            "General Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/55/58.png/400px-58.png",
-            "Fitness Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/59.png/400px-59.png",
-            "History Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e6/60.png/400px-60.png",
-            "Law Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ac/61.png/400px-61.png",
-            "Mathematics Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/62/62.png/400px-62.png",
-            "Psychology Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a9/63.png/400px-63.png",
-            "Defense Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/57.png/400px-57.png",
-            "Sports Bachelor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/86/64.png/400px-64.png",
-            "Tough": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e3/533.png/400px-533.png",
-            "Talented": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ab/530.png/400px-530.png",
-            "Tireless": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e7/525.png/400px-525.png",
-            "Smart Alec": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e9/653.png/400px-653.png",
-            "Clever Dick": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fd/659.png/400px-659.png",
-            "Wise Guy": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/35/651.png/400px-651.png",
-            "Whiz Kid": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2a/656.png/400px-656.png",
-            "Worker Bee": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c3/844.png/400px-844.png",
-            "Bronze Belt": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/74/233.png/400px-233.png",
-            "Silver Belt": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7b/234.png/400px-234.png",
-            "Gold Belt": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b1/235.png/400px-235.png",
-            "Abaddon": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/244.png/400px-244.png",
-            "Behemoth": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/240.png/400px-240.png",
-            "Draco": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0b/241.png/400px-241.png",
-            "Supersonic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/243.png/400px-243.png",
-            "Powerhouse": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3c/643.png/400px-643.png",
-            "Turbocharged": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4d/505.png/400px-505.png",
-            "Freerunner": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/48/635.png/400px-635.png",
-            "Reinforced": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/99/497.png/400px-497.png",
-            "Mighty Roar": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d9/646.png/400px-646.png",
-            "Lightspeed": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ca/506.png/400px-506.png",
-            "Bulletproof": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d0/640.png/400px-640.png",
-            "Alpinist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f9/629.png/400px-629.png",
-            "Well Built": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/86/647.png/400px-647.png",
-            "Arrowshot": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/24/550.png/400px-550.png",
-            "Funambulist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fd/638.png/400px-638.png",
-            "Shielded": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/69/498.png/400px-498.png",
-            "Lean": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/687.png/400px-687.png",
-            "Fit": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/720.png/400px-720.png",
-            "Healthy": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/686.png/400px-686.png",
-            "Toned": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/723.png/400px-723.png",
-            "Athletic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/01/694.png/400px-694.png",
-            "Conditioned": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6d/708.png/400px-708.png",
-            "Pumped": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/32/679.png/400px-679.png",
-            "Jacked": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/721.png/400px-721.png",
-            "Ripped": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/690.png/400px-690.png",
-            "Shredded": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4e/704.png/400px-704.png",
-            "Pocket Money": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/12.png/400px-12.png",
-            "Green Green Grass": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/58/10.png/400px-10.png",
-            "Moneybags": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/10/3.png/400px-3.png",
-            "Stock Analyst": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/19.png/400px-19.png",
-            "Dividend": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/77/546.png/400px-546.png",
-            "Monopoly": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bd/869.png/400px-869.png",
-            "City Slicker": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/85/544.png/400px-544.png",
-            "Tendies": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/61/548.png/400px-548.png",
-            "Stonks": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d6/1007.png/400px-1007.png",
-            "Bullish": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f9/1005.png/400px-1005.png",
-            "Bearish": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/02/1006.png/400px-1006.png",
-            "Diamond Hands": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f3/545.png/400px-545.png",
-            "Loan Shark": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/8.png/400px-8.png",
-            "Wholesaler": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ea/268.png/400px-268.png",
-            "Pious": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/520.png/400px-520.png",
-            "Saintly": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ec/521.png/400px-521.png",
-            "Forgiven": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ca/316.png/400px-316.png",
-            "Devout": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/71/523.png/400px-523.png",
-            "Sacrificial": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7c/522.png/400px-522.png",
-            "Repeat Offender": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d1/906.png/400px-906.png",
-            "Bar Breaker": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/25/248.png/400px-248.png",
-            "Aiding And Abetting": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/dd/249.png/400px-249.png",
-            "Don't Drop It": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/250.png/400px-250.png",
-            "Freedom Isn't Free": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ec/252.png/400px-252.png",
-            "Booboo": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a3/903.png/400px-903.png",
-            "Magical Veins": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/7.png/400px-7.png",
-            "Florence Nightingale": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/23.png/400px-23.png",
-            "Second Chance": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0a/267.png/400px-267.png",
-            "Vampire": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/46/406.png/400px-406.png",
-            "Clotted": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cb/367.png/400px-367.png",
-            "Transfusion": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/38/418.png/400px-418.png",
-            "Anaemic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/79/398.png/400px-398.png",
-            "Miracle Worker": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/322.png/400px-322.png",
-            "Resurrection": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/15/870.png/400px-870.png",
-            "Crucifixion": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/863.png/400px-863.png",
-            "Another Brick In The Wall": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/88/18.png/400px-18.png",
-            "Half Way There": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/75/259.png/400px-259.png",
-            "The Beautiful City": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c0/13.png/400px-13.png",
-            "To The Limit": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/91/265.png/400px-265.png",
-            "The Whole Nine Yards": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/92/264.png/400px-264.png",
-            "Welcome": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/873.png/400px-873.png",
-            "Couch Potato": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0f/245.png/400px-245.png",
-            "Fascination": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a4/163.png/400px-163.png",
-            "Chasm": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0f/162.png/400px-162.png",
-            "Stairway To Heaven": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4f/166.png/400px-166.png",
-            "Alcoholic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6a/534.png/400px-534.png",
-            "Sodaholic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/23/538.png/400px-538.png",
-            "Diabetic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b0/537.png/400px-537.png",
-            "Optimist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8b/238.png/400px-238.png",
-            "Lavish": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3e/743.png/400px-743.png",
-            "Bibliophile": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/539.png/400px-539.png",
-            "Worth It": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/27/527.png/400px-527.png",
-            "Eco Friendly": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c8/271.png/400px-271.png",
-            "Stinker": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7f/678.png/400px-678.png",
-            "Wipeout": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b3/716.png/400px-716.png",
-            "Bargain Hunter": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/07/273.png/400px-273.png",
-            "Foul Play": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5d/717.png/400px-717.png",
-            "I'm Watching You": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4a/1.png/400px-1.png",
-            "Middleman": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cc/239.png/400px-239.png",
-            "Collector": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ad/699.png/400px-699.png",
-            "Radaway": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2d/882.png/400px-882.png",
-            "Energize": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/67/266.png/400px-266.png",
-            "You've Got Some Nerve": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c3/566.png/400px-566.png",
-            "Compulsive": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e2/334.png/400px-334.png",
-            "Seeker": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c0/229.png/400px-229.png",
-            "Silicon Valley": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/98/216.png/400px-216.png",
-            "The Affronted": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bb/220.png/400px-220.png",
-            "Energetic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2d/395.png/400px-395.png",
-            "Ecstatic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/eb/380.png/400px-380.png",
-            "Christmas in Torn": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/309.png/400px-309.png",
-            "Trick or Treat": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ab/443.png/400px-443.png",
-            "Torniversary": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d9/459.png/400px-459.png",
-            "Buffed": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/607.png/400px-607.png",
-            "Web of Perks": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/244.png/400px-244.png",
-            "OP": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8a/620.png/400px-620.png",
-            "10-stack": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/617.png/400px-617.png",
-            "Decorated": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/606.png/400px-606.png",
-            "Honored": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8e/614.png/400px-614.png",
-            "Time Traveller": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/96/312.png/400px-312.png",
-            "Fresh Start": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/26/288.png/400px-288.png",
-            "Tornication": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b4/731.png/400px-731.png",
-            "Resolution": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e7/375.png/400px-375.png",
-            "Leaderboard": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bc/700.png/400px-700.png",
-            "RNG": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/55/839.png/400px-839.png",
-            "Historian": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/93/845.png/400px-845.png",
-            "Nice": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6a/888.png/400px-888.png",
-            "Intern": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/4.png/400px-4.png",
-            "Stuck In a Rut": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/164.png/400px-164.png",
-            "Overtime": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/dc/742.png/400px-742.png",
-            "Journalist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/82/5.png/400px-5.png",
-            "Velutinous": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0b/167.png/400px-167.png",
-            "Luxury Real Estate": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/9.png/400px-9.png",
-            "The High Life": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/36/258.png/400px-258.png",
-            "Landlord": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/53/860.png/400px-860.png",
-            "Protege": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/371.png/400px-371.png",
-            "Mercenary": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/68/664.png/400px-664.png",
-            "Task Master": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/00/636.png/400px-636.png",
-            "Driving Elite": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/71/21.png/400px-21.png",
-            "Redline": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f5/274.png/400px-274.png",
-            "Motorhead": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/572.png/400px-572.png",
-            "Wrecked": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c9/734.png/400px-734.png",
-            "Checkered Past": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/571.png/400px-571.png",
-            "On Track": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/45/581.png/400px-581.png",
-            "Two's Company": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/217.png/400px-217.png",
-            "Three's A Crowd": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/218.png/400px-218.png",
-            "Social Butterfly": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a4/219.png/400px-219.png",
-            "Pyramid Scheme": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/68/246.png/400px-246.png",
-            "Allure": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cb/213.png/400px-213.png",
-            "Good Friday": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b3/222.png/400px-222.png",
-            "KIA": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/21/221.png/400px-221.png",
-            "Departure": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/45/277.png/400px-277.png",
-            "Mission Accomplished": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/64/212.png/400px-212.png",
-            "Purple Heart": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/226.png/400px-226.png",
-            "Supremacy": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6c/280.png/400px-280.png",
-            "Domination": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cb/279.png/400px-279.png",
-            "Champion": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/16/330.png/400px-330.png",
-            "Phantastic": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d6/969.png/400px-969.png",
-            "Something Humerus": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/964.png/400px-964.png",
-            "Oh My Gourd!": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0f/966.png/400px-966.png",
-            "Globule": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fa/283.png/400px-283.png",
-            "Retro": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/308.png/400px-308.png",
-            "Acute": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f0/298.png/400px-298.png",
-            "Serenity": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3d/313.png/400px-313.png",
-            "The Socialist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/223.png/400px-223.png",
-            "Jack Of All Trades": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d3/214.png/400px-214.png",
-            "Futurity": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a5/318.png/400px-318.png",
-            "Constellations": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0d/297.png/400px-297.png",
-            "Parallel": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d4/281.png/400px-281.png",
-            "Labyrinth": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/40/215.png/400px-215.png",
-            "Glimmer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/df/315.png/400px-315.png",
-            "Proven Capacity": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e4/224.png/400px-224.png",
-            "Master Of One": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/26/225.png/400px-225.png",
-            "Globally Effective": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0a/278.png/400px-278.png",
-            "Supernova": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4e/321.png/400px-321.png",
-            "Pepperoni": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a3/294.png/400px-294.png",
-            "Electric Dream": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d5/284.png/400px-284.png",
-            "Resistance": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b8/306.png/400px-306.png",
-            "Brainz": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/31/311.png/400px-311.png",
-            "Survivor": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ea/263.png/400px-263.png",
-            "Backdrop": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ae/730.png/400px-730.png",
-            "Hairy": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/729.png/400px-729.png",
-            "Mile High Club": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/59/11.png/400px-11.png",
-            "There And Back": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9d/165.png/400px-165.png",
-            "Cascado": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/131.png/400px-131.png",
-            "Toronto": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d1/139.png/400px-139.png",
-            "Shark Bait": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bb/272.png/400px-272.png",
-            "Hula": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6c/133.png/400px-133.png",
-            "British Pride": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/135.png/400px-135.png",
-            "Like The Celebs": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9d/137.png/400px-137.png",
-            "Maradona": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ca/130.png/400px-130.png",
-            "The Rising Sun": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3e/134.png/400px-134.png",
-            "Year Of The Dragon": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4a/138.png/400px-138.png",
-            "Land Of Promise": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/132.png/400px-132.png",
-            "Cape Town": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/de/136.png/400px-136.png",
-            "Tourist": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/549.png/400px-549.png",
-            "Frequent Flyer": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/14/567.png/400px-567.png",
-            "Globetrotter": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/557.png/400px-557.png",
-            "Mule": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c8/541.png/400px-541.png",
-            "Smuggler": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3d/542.png/400px-542.png",
-            "Trafficker": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/70/543.png/400px-543.png",
-            "Souvenir": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5b/853.png/400px-853.png",
-            "International": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/69/846.png/400px-846.png"
-        };
+        // Exact hardcoded JSON supplied by user
+        const AWARD_DATA = [
+            {"name": "Various","description": "Country Flags","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e9/75.png/200px-75.png","awardId": "75","difficulty": 1},
+            {"name": "Various","description": "Non-Country Flags","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/190.png/200px-190.png","awardId": "190","difficulty": 1},
+            {"name": "Default","description": "Default","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/169.png/200px-169.png","awardId": "169","difficulty": 1},
+            {"name": "Standard","description": "Standard Bar","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f8/168.png/200px-168.png","awardId": "168","difficulty": 1},
+            {"name": "Philistine","description": "In memory of our dear friend Philistine","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e0/857.png/200px-857.png","awardId": "857","difficulty": 1},
+            {"name": "Biccy","description": "In memory of our dear friend Biccy","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/10/858.png/200px-858.png","awardId": "858","difficulty": 1},
+            {"name": "787thWarDog","description": "In memory of our dear friend 787thWarDog","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/64/859.png/200px-859.png","awardId": "859","difficulty": 1},
+            {"name": "Chainer 1","description": "Participate in a 10 length chain","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/06/253.png/200px-253.png","awardId": "253","difficulty": 2},
+            {"name": "Chainer 2","description": "Participate in a 100 length chain","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/255.png/200px-255.png","awardId": "255","difficulty": 3},
+            {"name": "Chainer 3","description": "Participate in a 1,000 length chain","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/257.png/200px-257.png","awardId": "257","difficulty": 5},
+            {"name": "Chainer 4","description": "Participate in a 10,000 length chain","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c4/475.png/200px-475.png","awardId": "475","difficulty": 7},
+            {"name": "Chainer 5","description": "Participate in a 100,000 length chain","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/73/476.png/200px-476.png","awardId": "476","difficulty": 10},
+            {"name": "Carnage","description": "Make a single hit that earns your faction 10 or more respect","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/256.png/200px-256.png","awardId": "256","difficulty": 4},
+            {"name": "Massacre","description": "Make a single hit that earns your faction 100 or more respect","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/477.png/200px-477.png","awardId": "477","difficulty": 7},
+            {"name": "Genocide","description": "Make a single hit that earns your faction 1,000 or more respect","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/478.png/200px-478.png","awardId": "478","difficulty": 10},
+            {"name": "Chain Saver","description": "Save a 100+ chain 10 seconds before it breaks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/66/916.png/200px-916.png","awardId": "916","difficulty": 5},
+            {"name": "Strongest Link","description": "Make 100 hits in a single chain","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/98/641.png/200px-641.png","awardId": "641","difficulty": 5},
+            {"name": "2800 Ft/S","description": "Achieve 100 finishing hits with rifles","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/db/146.png/200px-146.png","awardId": "146","difficulty": 3},
+            {"name": "Act of Faith","description": "Achieve 100 finishing hits with SMGs","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/51/148.png/200px-148.png","awardId": "148","difficulty": 3},
+            {"name": "Axe Wound","description": "Achieve 100 finishing hits with clubbing weapons","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d3/142.png/200px-142.png","awardId": "142","difficulty": 3},
+            {"name": "Cartridge Packer","description": "Achieve 100 finishing hits with shotguns","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a3/147.png/200px-147.png","awardId": "147","difficulty": 3},
+            {"name": "Leonidas","description": "Achieve a finishing hit with Kick","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/21/871.png/200px-871.png","awardId": "871","difficulty": 2},
+            {"name": "Lend A Hand","description": "Achieve 100 finishing hits with machine guns","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/144.png/200px-144.png","awardId": "144","difficulty": 4},
+            {"name": "Pin Puller","description": "Achieve 100 finishing hits with temporary weapons","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7d/143.png/200px-143.png","awardId": "143","difficulty": 4},
+            {"name": "Machinist","description": "Achieve 100 finishing hits with mechanical weapons","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b9/28.png/200px-28.png","awardId": "28","difficulty": 4},
+            {"name": "Slasher","description": "Achieve 100 finishing hits with slashing weapons","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/150.png/200px-150.png","awardId": "150","difficulty": 3},
+            {"name": "Stumped","description": "Achieve 100 finishing hits with heavy artillery","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/67/141.png/200px-141.png","awardId": "141","difficulty": 5},
+            {"name": "The Stabbist","description": "Achieve 100 finishing hits with piercing weapons","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d2/149.png/200px-149.png","awardId": "149","difficulty": 3},
+            {"name": "Yours Says Replica...","description": "Achieve 100 finishing hits with pistols","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c7/145.png/200px-145.png","awardId": "145","difficulty": 3},
+            {"name": "Unarmed","description": "Achieve 100 fists or kick finishing hits","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/515.png/200px-515.png","awardId": "515","difficulty": 4},
+            {"name": "Modded","description": "Equip two high-tier mods to a weapon","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3f/491.png/200px-491.png","awardId": "491","difficulty": 5},
+            {"name": "Specialist","description": "Achieve 100% EXP on 25 different weapons","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f9/778.png/200px-778.png","awardId": "778","difficulty": 8},
+            {"name": "Riddled","description": "Defeat an opponent after hitting at least 10 different body parts in a single attack","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/31/781.png/200px-781.png","awardId": "781","difficulty": 6},
+            {"name": "War Machine","description": "Achieve 1,000 finishing hits in every category","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/af/611.png/200px-611.png","awardId": "611","difficulty": 10},
+            {"name": "Surplus","description": "Use 100 rounds of special ammunition","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cf/800.png/200px-800.png","awardId": "800","difficulty": 4},
+            {"name": "Bandolier","description": "User 1,000 rounds of special ammunition","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e4/793.png/200px-793.png","awardId": "793","difficulty": 6},
+            {"name": "Quartermaster","description": "Use 10,000 rounds of special ammunition","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b0/791.png/200px-791.png","awardId": "791","difficulty": 9},
+            {"name": "Maimed","description": "Use 2,500 Hollow Point rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/82/942.png/200px-942.png","awardId": "942","difficulty": 6},
+            {"name": "Dragon's Breath","description": "Use a 12 Gauge Incendiary round","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/dc/951.png/200px-951.png","awardId": "951","difficulty": 3},
+            {"name": "Marked","description": "Use 2,500 Tracer rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2b/945.png/200px-945.png","awardId": "945","difficulty": 6},
+            {"name": "Scorched","description": "Use 2,500 Incendiary rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/944.png/200px-944.png","awardId": "944","difficulty": 6},
+            {"name": "Penetrated","description": "Use 2,500 Piercing rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5a/943.png/200px-943.png","awardId": "943","difficulty": 6},
+            {"name": "Mod Boss","description": "Own at least 20 weapon mods","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6d/851.png/200px-851.png","awardId": "851","difficulty": 6},
+            {"name": "Gone Fishing","description": "Be defeated by a Trout","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/99/902.png/200px-902.png","awardId": "902","difficulty": 2},
+            {"name": "Kill Streaker 1","description": "Achieve a 10 kill streak","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d6/15.png/200px-15.png","awardId": "15","difficulty": 3},
+            {"name": "Kill Streaker 2","description": "Achieve a 100 kill streak","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1e/16.png/200px-16.png","awardId": "16","difficulty": 6},
+            {"name": "Kill Streaker 3","description": "Achieve a 500 kill streak","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c9/17.png/200px-17.png","awardId": "17","difficulty": 9},
+            {"name": "Wham!","description": "Deal over 100,000 total damage","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/47/1004.png/200px-1004.png","awardId": "1004","difficulty": 3},
+            {"name": "Flatline","description": "Achieve a one hit kill","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/eb/254.png/200px-254.png","awardId": "254","difficulty": 3},
+            {"name": "Sidekick","description": "Assist in 250 attacks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/490.png/200px-490.png","awardId": "490","difficulty": 5},
+            {"name": "Precision","description": "Achieve 25 critical hits","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/07/20.png/200px-20.png","awardId": "20","difficulty": 2},
+            {"name": "50cal","description": "Achieve 1,000 Critical Hits","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/24/227.png/200px-227.png","awardId": "227","difficulty": 6},
+            {"name": "Domino Effect","description": "Beat someone wearing this honor","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/51/230.png/200px-230.png","awardId": "230","difficulty": 2},
+            {"name": "Bounty Hunter","description": "Collect 250 bounties","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f2/232.png/200px-232.png","awardId": "232","difficulty": 6},
+            {"name": "Dead Or Alive","description": "Earn $10,000,000 from bounty hunting","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/236.png/200px-236.png","awardId": "236","difficulty": 6},
+            {"name": "Spray And Pray","description": "Fire 1,000 rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/140.png/200px-140.png","awardId": "140","difficulty": 2},
+            {"name": "Two Halves Make A Hole","description": "Fire 10,000 rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/151.png/200px-151.png","awardId": "151","difficulty": 4},
+            {"name": "Blood Money","description": "Make $1,000,000 from a single mugging","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f3/247.png/200px-247.png","awardId": "247","difficulty": 5},
+            {"name": "Deadlock","description": "Stalemate 100 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ce/270.png/200px-270.png","awardId": "270","difficulty": 6},
+            {"name": "Boom!","description": "Deal over 10,000,000 total damage","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/99/1001.png/200px-1001.png","awardId": "1001","difficulty": 6},
+            {"name": "Yoink","description": "Successfully mug someone who just mugged someone else","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e4/955.png/200px-955.png","awardId": "955","difficulty": 6},
+            {"name": "007","description": "Win 1,000 attacks and 1,000 defends","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cf/228.png/200px-228.png","awardId": "228","difficulty": 8},
+            {"name": "Self Defense","description": "Win 50 Defends","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/75/22.png/200px-22.png","awardId": "22","difficulty": 5},
+            {"name": "Night Walker","description": "Win 100 stealthed attacks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/27.png/200px-27.png","awardId": "27","difficulty": 5},
+            {"name": "Guardian Angel","description": "Defeat someone while they are attacking someone else","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/de/615.png/200px-615.png","awardId": "615","difficulty": 4},
+            {"name": "Semper Fortis","description": "Defeat someone who has more battle stats than you in a solo attack","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/481.png/200px-481.png","awardId": "481","difficulty": 4},
+            {"name": "Manu Forti","description": "Defeat someone who has at least double your battle stats in a solo attack","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/32/627.png/200px-627.png","awardId": "627","difficulty": 6},
+            {"name": "Vae Victis","description": "Defeat someone who has five times more battlestats than you in a solo attack","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2c/631.png/200px-631.png","awardId": "631","difficulty": 8},
+            {"name": "Survivalist","description": "Win an attack with only 1% life remaining","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/be/500.png/200px-500.png","awardId": "500","difficulty": 5},
+            {"name": "Bam!",
+            "description": "Deal over 1,000,000 total damage","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d3/1002.png/200px-1002.png","awardId": "1002","difficulty": 5},
+            {"name": "Double Dragon","description": "Assist in a single attack","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b9/639.png/200px-639.png","awardId": "639","difficulty": 2},
+            {"name": "Pressure Point","description": "Achieve 100 One Hit kills","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f5/517.png/200px-517.png","awardId": "517","difficulty": 5},
+            {"name": "Fury","description": "Achieve 10,000 hits.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/601.png/200px-601.png","awardId": "601","difficulty": 6},
+            {"name": "Boss Fight","description": "Participate in the defeat of Lootable NPC's.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b4/665.png/200px-665.png","awardId": "665","difficulty": 6},
+            {"name": "1337","description": "Deal exactly 1,337 damage to an opponent in a single hit","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d5/608.png/200px-608.png","awardId": "608","difficulty": 7},
+            {"name": "Going Postal","description": "Defeat a company co-worker","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/71/896.png/200px-896.png","awardId": "896","difficulty": 3},
+            {"name": "Friendly Fire","description": "Defeat a fellow faction member","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a4/605.png/200px-605.png","awardId": "605","difficulty": 3},
+            {"name": "Church Mouse","description": "Be mugged for $1","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a6/739.png/200px-739.png","awardId": "739","difficulty": 2},
+            {"name": "Phoenix","description": "Defeat someone after losing to them within 10 minutes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/02/317.png/200px-317.png","awardId": "317","difficulty": 3},
+            {"name": "Devastation","description": "Deal at least 5,000 damage in a single hit","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c7/740.png/200px-740.png","awardId": "740","difficulty": 4},
+            {"name": "Obliteration","description": "Deal at least 10,000 damage in a single hit","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1b/741.png/200px-741.png","awardId": "741","difficulty": 6},
+            {"name": "Annihilation","description": "Deal at least 15,000 damage in a single hit","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6e/786.png/200px-786.png","awardId": "786","difficulty": 7},
+            {"name": "Kapow!","description": "Deal over 100,000,000 total damage","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/1003.png/200px-1003.png","awardId": "1003","difficulty": 10},
+            {"name": "Giant Slayer","description": "Receive loot from a defeated NPC","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/30/670.png/200px-670.png","awardId": "670","difficulty": 7},
+            {"name": "Bare","description": "Win 250 unarmored attacks or defends","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fc/763.png/200px-763.png","awardId": "763","difficulty": 6},
+            {"name": "Vengeance","description": "Successfully perform a faction retaliation hit","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/488.png/200px-488.png","awardId": "488","difficulty": 4},
+            {"name": "Invictus","description": "Successfully defend against someone who has at least double your battle stats. Timeout doesn't count.[1]","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5f/719.png/200px-719.png","awardId": "719","difficulty": 7},
+            {"name": "Lead Salad","description": "Fire 100,000 rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/08/834.png/200px-834.png","awardId": "834","difficulty": 7},
+            {"name": "Peppered","description": "Fire 1,000,000 rounds","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5c/836.png/200px-836.png","awardId": "836","difficulty": 10},
+            {"name": "Finale","description": "Defeat someone on the 25th turn of an attack","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/828.png/200px-828.png","awardId": "828","difficulty": 7},
+            {"name": "Deadly Duo","description": "Defeat someone with your spouse","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/51/827.png/200px-827.png","awardId": "827","difficulty": 3},
+            {"name": "Lovestruck","description": "Defeat a married couple","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/21/838.png/200px-838.png","awardId": "838","difficulty": 4},
+            {"name": "Hands Solo","description": "Defeat someone using only your fists on May 4th","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bf/843.png/200px-843.png","awardId": "843","difficulty": 4},
+            {"name": "Triple Tap","description": "Achieve three headshots in a row","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/93/414.png/200px-414.png","awardId": "414","difficulty": 6},
+            {"name": "Woodland Camo","description": "5 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/68/39.png/200px-39.png","awardId": "39","difficulty": 1},
+            {"name": "Desert Storm Camo","description": "20 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4d/40.png/200px-40.png","awardId": "40","difficulty": 2},
+            {"name": "Urban Camo","description": "50 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/41.png/200px-41.png","awardId": "41","difficulty": 3},
+            {"name": "Arctic Camo","description": "100 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3d/42.png/200px-42.png","awardId": "42","difficulty": 3},
+            {"name": "Fall Camo","description": "250 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1e/43.png/200px-43.png","awardId": "43","difficulty": 4},
+            {"name": "Yellow Camo","description": "500 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8b/44.png/200px-44.png","awardId": "44","difficulty": 5},
+            {"name": "Digital Camo","description": "1,000 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1f/45.png/200px-45.png","awardId": "45","difficulty": 6},
+            {"name": "Red Camo","description": "2,000 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/46.png/200px-46.png","awardId": "46","difficulty": 7},
+            {"name": "Blue Camo","description": "3,000 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/23/47.png/200px-47.png","awardId": "47","difficulty": 8},
+            {"name": "Orange Camo","description": "4,000 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e7/48.png/200px-48.png","awardId": "48","difficulty": 9},
+            {"name": "Pink Camo","description": "5,000 Attacks Won","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/92/49.png/200px-49.png","awardId": "49","difficulty": 10},
+            {"name": "Zebra Skin","description": "50 Hunting Skill","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e1/50.png/200px-50.png","awardId": "50","difficulty": 6},
+            {"name": "Leopard Skin","description": "75 Hunting Skill","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2f/51.png/200px-51.png","awardId": "51","difficulty": 8},
+            {"name": "Tiger Skin","description": "100 Hunting Skill","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/85/52.png/200px-52.png","awardId": "52","difficulty": 10},
+            {"name": "Lucky Break","description": "Win the daily, weekly or monthly Lottery jackpot","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/16/276.png/200px-276.png","awardId": "276","difficulty": 10},
+            {"name": "Jackpot","description": "Win the Slot Machine jackpot","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ee/275.png/200px-275.png","awardId": "275","difficulty": 8},
+            {"name": "Poker King","description": "Reach a Poker score of 10 million","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c3/237.png/200px-237.png","awardId": "237","difficulty": 8},
+            {"name": "Spinner","description": "Do 1,000 spins of the Roulette wheel","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1d/269.png/200px-269.png","awardId": "269","difficulty": 5},
+            {"name": "Highs And Lows","description": "Achieve a win streak of 25 in High-Low","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/50/326.png/200px-326.png","awardId": "326","difficulty": 9},
+            {"name": "One In Six","description": "Win 50 games of Foot Russian Roulette","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bc/327.png/200px-327.png","awardId": "327","difficulty": 6},
+            {"name": "Daddy's New Shoes","description": "Win $100,000,000 in a single game of Russian Roulette","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/513.png/200px-513.png","awardId": "513","difficulty": 7},
+            {"name": "Foot Soldier","description": "Beat 10 unique opponents in Russian Roulette","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/00/519.png/200px-519.png","awardId": "519","difficulty": 6},
+            {"name": "Twenty-One","description": "Win a Natural, Six Card Charlie, Double Down and Insurance on Blackjack","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/338.png/200px-338.png","awardId": "338","difficulty": 8},
+            {"name": "Awesome","description": "Win while spinning the Wheel of Awesome","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/427.png/200px-427.png","awardId": "427","difficulty": 4},
+            {"name": "Mediocre","description": "Win while spinning the Wheel of Mediocrity","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6e/437.png/200px-437.png","awardId": "437","difficulty": 3},
+            {"name": "Lame","description": "Win while spinning the Wheel of Lame","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/431.png/200px-431.png","awardId": "431","difficulty": 2},
+            {"name": "Find A Penny Pick It Up","description": "5,000 \"Other\" Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/6.png/200px-6.png","awardId": "6","difficulty": 5},
+            {"name": "Civil Offence","description": "5,000 Selling Illegal Products Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/db/152.png/200px-152.png","awardId": "152","difficulty": 6},
+            {"name": "Candy Man","description": "1,000 Thefts Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a9/25.png/200px-25.png","awardId": "25","difficulty": 3},
+            {"name": "Smile, You're On Camera","description": "2,500 Thefts Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/49/157.png/200px-157.png","awardId": "157","difficulty": 5},
+            {"name": "Smokin' Barrels","description": "5,000 Thefts Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/2.png/200px-2.png","awardId": "2","difficulty": 6},
+            {"name": "Breaking And Entering","description": "7,500 Thefts Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5d/158.png/200px-158.png","awardId": "158","difficulty": 7},
+            {"name": "Stroke Bringer","description": "10,000 Thefts Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fc/154.png/200px-154.png","awardId": "154","difficulty": 8},
+            {"name": "Escobar","description": "5,000 Drug Deals Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/05/153.png/200px-153.png","awardId": "153","difficulty": 8},
+            {"name": "Bug","description": "1,000 Computer Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/81/161.png/200px-161.png","awardId": "161","difficulty": 4},
+            {"name": "We Have A Breach","description": "5,000 Computer Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/155.png/200px-155.png","awardId": "155","difficulty": 7},
+            {"name": "Professional","description": "5,000 Murders Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e2/159.png/200px-159.png","awardId": "159","difficulty": 9},
+            {"name": "Fire starter","description": "5,000 Fraud Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/24/24.png/200px-24.png","awardId": "24","difficulty": 8},
+            {"name": "Joy Rider","description": "5,000 Auto Theft Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/20/160.png/200px-160.png","awardId": "160","difficulty": 8},
+            {"name": "Society's Worst","description": "10,000 Total Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/81/251.png/200px-251.png","awardId": "251","difficulty": 8},
+            {"name": "Mastermind","description": "Participate in 100 Organized Crimes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/552.png/200px-552.png","awardId": "552","difficulty": 7},
+            {"name": "Spoiled Rotten","description": "Find all seven rotten food & drink","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/70/1012.png/200px-1012.png","awardId": "1012","difficulty": 6},
+            {"name": "Pay Dirt","description": "Achieve a skill level of 100 in Search for Cash","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ec/1014.png/200px-1014.png","awardId": "1014","difficulty": 4},
+            {"name": "Online Entrepreneur","description": "Acquire 10,000 customers on your online counterfeit DVD store","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/da/1031.png/200px-1031.png","awardId": "1031","difficulty": 6},
+            {"name": "Box Office","description": "Achieve a skill level of 100 in Bootlegging","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/10/1025.png/200px-1025.png","awardId": "1025","difficulty": 5},
+            {"name": "Fresh Blud","description": "Become initiated into one of Torn's five graffiti crews","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/1032.png/200px-1032.png","awardId": "1032","difficulty": 3},
+            {"name": "Let Us Spray","description": "Achieve a skill level of 100 in Graffiti","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1c/1034.png/200px-1034.png","awardId": "1034","difficulty": 5},
+            {"name": "Notorious","description": "Achieve 100% notoriety at all stores at the same time in Shoplifting","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/1038.png/200px-1038.png","awardId": "1038","difficulty": 7},
+            {"name": "Retail Therapy","description": "Achieve a skill level of 100 in Shoplifting","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/af/1029.png/200px-1029.png","awardId": "1029","difficulty": 5},
+            {"name": "Pig Rustler","description": "Pickpocket a police officer's badge","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/49/1076.png/200px-1076.png","awardId": "1076","difficulty": 7},
+            {"name": "Pocketeer","description": "Achieve a skill level of 100 in Pickpocketing","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/Pocketeer.png/200px-Pocketeer.png","difficulty": 5},
+            {"name": "Zero Liability","description": "Recover a skimmer which has accumulated at least 250 card details","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/92/1054.png/200px-1054.png","awardId": "1054","difficulty": 4},
+            {"name": "King PIN","description": "Achieve a skill level of 100 in Card Skimming","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/91/1053.png/200px-1053.png","awardId": "1053","difficulty": 5},
+            {"name": "Key to the City","description": "Successfully burgle all 34 areas","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/676.png/200px-676.png","awardId": "676","difficulty": 8},
+            {"name": "Overclocked","description": "Run a rig at 2,500,000 MIPS in Cracking","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/af/1241.png/200px-1241.png","awardId": "1241","difficulty": 9},
+            {"name": "Breaking and Entering","description": "Achieve a skill level of 100 in Burglary","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/1064.png/200px-1064.png","awardId": "1064","difficulty": 6},
+            {"name": "Tekkers","description": "Achieve maximum technique in all four Hustling confidence tricks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/Tekkers.png/200px-Tekkers.png","difficulty": 8},
+            {"name": "Crowd Teaser","description": "Achieve a skill level of 100 in Hustling","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3c/Crowd.png/200px-Crowd.png","difficulty": 6},
+            {"name": "Dissolving Agent","description": "Dissolve a Dead Body in Acid","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/Disolve.png/200px-Disolve.png","difficulty": 6},
+            {"name": "Trash Bandit","description": "Achieve a skill level of 100 in Disposal","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6e/Trash.png/200px-Trash.png","difficulty": 7},
+            {"name": "Character Assassination","description": "Successfully guess 250 password characters in Cracking","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d8/Character.png/200px-Character.png","difficulty": 7},
+            {"name": "Cryptographer","description": "Achieve a skill level of 100 in Cracking","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f8/Crypto.png/200px-Crypto.png","difficulty": 8},
+            {"name": "Documented Success","description": "Achieve a skill level of 100 in Forgery","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3e/1130.png/200px-1130.png","awardId": "1130","difficulty": 6},
+            {"name": "Assembly Line","description": "Have ten of the same project in a state of cooldown at the same time in Forgery","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/1136.png/200px-1136.png","awardId": "1136","difficulty": 7},
+            {"name": "Decepticon","description": "Respond to a victim's Temptation, Sensitivity, Concern, and Hesitation within a single successful scam attempt","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/96/1166.png/200px-1166.png","awardId": "1166","difficulty": 6},
+            {"name": "Alpha Mail","description": "Achieve a skill level of 100 in Scamming","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1b/1277.png/200px-1277.png","awardId": "1277","difficulty": 8},
+            {"name": "Shore Thing","description": "Find sand while searching the beach","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a0/1326.png/200px-1326.png","awardId": "1326","difficulty": 2},
+            {"name": "Cinephile","description": "Sell 10,000 DVDs of each movie genre","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e9/1028.png/200px-1028.png","awardId": "1028","difficulty": 9},
+            {"name": "Urban Legend","description": "Achieve 5/5 reputation in all seven Graffiti locations","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7e/1271.png/200px-1271.png","awardId": "1271","difficulty": 9},
+            {"name": "Line of Credit","description": "Sell at least 10,000 card details at once in Card Skimming","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4e/1229.png/200px-1229.png","awardId": "1229","difficulty": 8},
+            {"name": "Snake Oil","description": "Win $100,000 on a single bet in Hustling","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a8/1284.png/200px-1284.png","awardId": "1284","difficulty": 7},
+            {"name": "Grift Horse","description": "Earn $1,000,000 from a single scam in Scamming","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/64/1218.png/200px-1218.png","awardId": "1218","difficulty": 8},
+            {"name": "Papers Please","description": "Create a passport in Forgery","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/65/1243.png/200px-1243.png","awardId": "1243","difficulty": 5},
+            {"name": "Crown Jewel","description": "Steal a Cluster Ring from the Jewelry Store in Shoplifting","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a6/328.png/200px-328.png","awardId": "328","difficulty": 9},
+            {"name": "Slim Pickings","description": "Steal exclusively from skinny targets in Pickpocketing","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/Slimpickings.png/200px-Slimpickings.png","difficulty": 5},
+            {"name": "Discovery","description": "Be in a faction which starts making a dirty bomb","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1f/231.png/200px-231.png","awardId": "231","difficulty": 9},
+            {"name": "RDD","description": "Use a dirty bomb","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/156.png/200px-156.png","awardId": "156","difficulty": 10},
+            {"name": "Slow Bomb","description": "Use a dirty bomb","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7b/14.png/200px-14.png","awardId": "14","difficulty": 10},
+            {"name": "Spaced Out","description": "Overdose on Cannabis","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/25/26.png/200px-26.png","awardId": "26","difficulty": 2},
+            {"name": "Who's Frank?","description": "Use 50 Cannabis","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/50/29.png/200px-29.png","awardId": "29","difficulty": 3},
+            {"name": "I Think I See Dead People","description": "Use 50 Shrooms","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0a/34.png/200px-34.png","awardId": "34","difficulty": 3},
+            {"name": "Party Animal","description": "Use 50 Ecstasy","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/30.png/200px-30.png","awardId": "30","difficulty": 3},
+            {"name": "Acid Dream","description": "Use 50 LSD","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/16/32.png/200px-32.png","awardId": "32","difficulty": 3},
+            {"name": "Painkiller","description": "Use 50 Vicodin","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/87/38.png/200px-38.png","awardId": "38","difficulty": 3},
+            {"name": "Horse Tranquilizer","description": "Use 50 Ketamine","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7d/31.png/200px-31.png","awardId": "31","difficulty": 3},
+            {"name": "The Fields Of Opium","description": "Use 50 Opium","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9c/33.png/200px-33.png","awardId": "33","difficulty": 3},
+            {"name": "Crank It Up","description": "Use 50 Speed","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c1/35.png/200px-35.png","awardId": "35","difficulty": 3},
+            {"name": "Angel Dust","description": "Use 50 PCP","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bf/36.png/200px-36.png","awardId": "36","difficulty": 3},
+            {"name": "Free Energy","description": "Use 50 Xanax","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/87/37.png/200px-37.png","awardId": "37","difficulty": 3},
+            {"name": "Biology Bachelor","description": "Complete all Biology courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2f/53.png/200px-53.png","awardId": "53","difficulty": 6},
+            {"name": "Business Bachelor","description": "Complete all Business Management courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d5/54.png/200px-54.png","awardId": "54","difficulty": 6},
+            {"name": "Combat Bachelor","description": "Complete all Combat Training courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/55.png/200px-55.png","awardId": "55","difficulty": 6},
+            {"name": "ICT Bachelor","description": "Complete all Computer Science courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/18/56.png/200px-56.png","awardId": "56","difficulty": 6},
+            {"name": "General Bachelor","description": "Complete all General Studies courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/55/58.png/200px-58.png","awardId": "58","difficulty": 5},
+            {"name": "Fitness Bachelor","description": "Complete all Health & Fitness courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/59.png/200px-59.png","awardId": "59","difficulty": 5},
+            {"name": "History Bachelor","description": "Complete all History courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e6/60.png/200px-60.png","awardId": "60","difficulty": 6},
+            {"name": "Law Bachelor","description": "Complete all Law courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ac/61.png/200px-61.png","awardId": "61","difficulty": 6},
+            {"name": "Mathematics Bachelor","description": "Complete all Maths courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/62/62.png/200px-62.png","awardId": "62","difficulty": 6},
+            {"name": "Psychology Bachelor","description": "Complete all Psychology courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a9/63.png/200px-63.png","awardId": "63","difficulty": 6},
+            {"name": "Defense Bachelor","description": "Complete all Self Defence courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/57.png/200px-57.png","awardId": "57","difficulty": 6},
+            {"name": "Sports Bachelor","description": "Complete all Sports Science courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/86/64.png/200px-64.png","awardId": "64","difficulty": 6},
+            {"name": "Tough","description": "Attain 100,000 manual labour","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e3/533.png/200px-533.png","awardId": "533","difficulty": 8},
+            {"name": "Talented","description": "Attain 100,000 intelligence","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ab/530.png/200px-530.png","awardId": "530","difficulty": 8},
+            {"name": "Tireless","description": "Attain 100,000 endurance","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e7/525.png/200px-525.png","awardId": "525","difficulty": 8},
+            {"name": "Smart Alec","description": "Complete 10 Education courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e9/653.png/200px-653.png","awardId": "653","difficulty": 3},
+            {"name": "Clever Dick","description": "Complete 25 Education courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fd/659.png/200px-659.png","awardId": "659","difficulty": 5},
+            {"name": "Wise Guy","description": "Complete 50 Education courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/35/651.png/200px-651.png","awardId": "651","difficulty": 7},
+            {"name": "Whiz Kid","description": "Complete 100 Education courses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2a/656.png/200px-656.png","awardId": "656","difficulty": 9},
+            {"name": "Worker Bee","description": "Achieve 10,000 in any working stat","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c3/844.png/200px-844.png","awardId": "844","difficulty": 4},
+            {"name": "Bronze Belt","description": "Own all lightweight gym memberships","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/74/233.png/200px-233.png","awardId": "233","difficulty": 3},
+            {"name": "Silver Belt","description": "Own all middleweight gym memberships","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7b/234.png/200px-234.png","awardId": "234","difficulty": 5},
+            {"name": "Gold Belt","description": "Own all heavyweight gym memberships","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b1/235.png/200px-235.png","awardId": "235","difficulty": 7},
+            {"name": "Abaddon","description": "Gain 1,000,000 Strength","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/244.png/200px-244.png","awardId": "244","difficulty": 4},
+            {"name": "Behemoth","description": "Gain 1,000,000 Defense","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/240.png/200px-240.png","awardId": "240","difficulty": 4},
+            {"name": "Draco","description": "Gain 1,000,000 Dexterity","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0b/241.png/200px-241.png","awardId": "241","difficulty": 4},
+            {"name": "Supersonic","description": "Gain 1,000,000 Speed","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/243.png/200px-243.png","awardId": "243","difficulty": 4},
+            {"name": "Powerhouse","description": "Gain 10,000,000 Strength","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3c/643.png/200px-643.png","awardId": "643","difficulty": 6},
+            {"name": "Turbocharged","description": "Gain 10,000,000 Speed","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4d/505.png/200px-505.png","awardId": "505","difficulty": 6},
+            {"name": "Freerunner","description": "Gain 10,000,000 Dexterity","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/48/635.png/200px-635.png","awardId": "635","difficulty": 6},
+            {"name": "Reinforced","description": "Gain 10,000,000 Defense","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/99/497.png/200px-497.png","awardId": "497","difficulty": 6},
+            {"name": "Mighty Roar","description": "Gain 100,000,000 Strength","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d9/646.png/200px-646.png","awardId": "646","difficulty": 8},
+            {"name": "Lightspeed","description": "Gain 100,000,000 Speed","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ca/506.png/200px-506.png","awardId": "506","difficulty": 8},
+            {"name": "Bulletproof","description": "Gain 100,000,000 Defense","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d0/640.png/200px-640.png","awardId": "640","difficulty": 8},
+            {"name": "Alpinist","description": "Gain 100,000,000 Dexterity","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f9/629.png/200px-629.png","awardId": "629","difficulty": 8},
+            {"name": "Well Built","description": "Gain 1,000,000,000 Strength","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/86/647.png/200px-647.png","awardId": "647","difficulty": 10},
+            {"name": "Arrowshot","description": "Gain 1,000,000,000 Speed","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/24/550.png/200px-550.png","awardId": "550","difficulty": 10},
+            {"name": "Funambulist","description": "Gain 1,000,000,000 Dexterity","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fd/638.png/200px-638.png","awardId": "638","difficulty": 10},
+            {"name": "Shielded","description": "Gain 1,000,000,000 Defense","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/69/498.png/200px-498.png","awardId": "498","difficulty": 10},
+            {"name": "Lean","description": "Attain 100 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/687.png/200px-687.png","awardId": "687","difficulty": 1},
+            {"name": "Fit","description": "Attain 1,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/720.png/200px-720.png","awardId": "720","difficulty": 1},
+            {"name": "Healthy","description": "Attain 10,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/686.png/200px-686.png","awardId": "686","difficulty": 2},
+            {"name": "Toned","description": "Attain 100,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/723.png/200px-723.png","awardId": "723","difficulty": 3},
+            {"name": "Athletic","description": "Attain 1,000,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/01/694.png/200px-694.png","awardId": "694","difficulty": 4},
+            {"name": "Conditioned","description": "Attain 10,000,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6d/708.png/200px-708.png","awardId": "708","difficulty": 5},
+            {"name": "Pumped","description": "Attain 100,000,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/32/679.png/200px-679.png","awardId": "679","difficulty": 7},
+            {"name": "Jacked","description": "Attain 1,000,000,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/721.png/200px-721.png","awardId": "721","difficulty": 8},
+            {"name": "Ripped","description": "Attain 10,000,000,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/690.png/200px-690.png","awardId": "690","difficulty": 9},
+            {"name": "Shredded","description": "Attain 100,000,000,000 total stats","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4e/704.png/200px-704.png","awardId": "704","difficulty": 10},
+            {"name": "Pocket Money","description": "Make an investment in the city bank","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/12.png/200px-12.png","awardId": "12","difficulty": 1},
+            {"name": "Green Green Grass","description": "Make an investment in the city bank of over $1,000,000,000.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/58/10.png/200px-10.png","awardId": "10","difficulty": 6},
+            {"name": "Moneybags","description": "Invest $100,000,000 in the stock market","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/10/3.png/200px-3.png","awardId": "3","difficulty": 4},
+            {"name": "Stock Analyst","description": "Achieve excellent success in the stock market","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/19.png/200px-19.png","awardId": "19","difficulty": 5},
+            {"name": "Dividend","description": "Receive 100 stock payouts","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/77/546.png/200px-546.png","awardId": "546","difficulty": 6},
+            {"name": "Monopoly","description": "Own every stock benefit at the same time","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bd/869.png/200px-869.png","awardId": "869","difficulty": 10},
+            {"name": "City Slicker","description": "Make a profit of $10,000,000 in a single Stock Market sale","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/85/544.png/200px-544.png","awardId": "544","difficulty": 5},
+            {"name": "Tendies","description": "Make a profit of $100,000,000 in a single Stock Market sale","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/61/548.png/200px-548.png","awardId": "548","difficulty": 7},
+            {"name": "Stonks","description": "Make a loss of $100,000,000 in a single Stock Market sale","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d6/1007.png/200px-1007.png","awardId": "1007","difficulty": 6},
+            {"name": "Bullish","description": "Achieve $1,000,000,000 in total profits in the Stock Market","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f9/1005.png/200px-1005.png","awardId": "1005","difficulty": 9},
+            {"name": "Bearish","description": "Achieve $1,000,000,000 in total losses in the Stock Market","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/02/1006.png/200px-1006.png","awardId": "1006","difficulty": 8},
+            {"name": "Diamond Hands","description": "Make a profit of $1,000,000,000 in a single Stock Market sale","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f3/545.png/200px-545.png","awardId": "545","difficulty": 10},
+            {"name": "Loan Shark","description": "Achieve a high credit score with Duke the Loan Shark.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/8.png/200px-8.png","awardId": "8","difficulty": 5},
+            {"name": "Wholesaler","description": "Sell 1,000 points in Points Market","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ea/268.png/200px-268.png","awardId": "268","difficulty": 3},
+            {"name": "Pious","description": "Donate a total of $100,000 to the church","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/520.png/200px-520.png","awardId": "520","difficulty": 1},
+            {"name": "Saintly","description": "Donate a total of $1,000,000 to the church","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ec/521.png/200px-521.png","awardId": "521","difficulty": 2},
+            {"name": "Forgiven","description": "Be truly forgiven for all of your sins","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ca/316.png/200px-316.png","awardId": "316","difficulty": 3},
+            {"name": "Devout","description": "Donate a total of $100,000,000 to the church","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/71/523.png/200px-523.png","awardId": "523","difficulty": 6},
+            {"name": "Sacrificial","description": "Donate $1,000,000,000 to the church","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7c/522.png/200px-522.png","awardId": "522","difficulty": 9},
+            {"name": "Repeat Offender","description": "Go to jail 250 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d1/906.png/200px-906.png","awardId": "906","difficulty": 5},
+            {"name": "Bar Breaker","description": "Bust 1,000 players out of jail","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/25/248.png/200px-248.png","awardId": "248","difficulty": 7},
+            {"name": "Aiding And Abetting","description": "Bust 2,500 players out of jail","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/dd/249.png/200px-249.png","awardId": "249","difficulty": 9},
+            {"name": "Don't Drop It","description": "Bust 10,000 players out of jail","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fb/250.png/200px-250.png","awardId": "250","difficulty": 10},
+            {"name": "Freedom Isn't Free","description": "Bail 500 players out of jail","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ec/252.png/200px-252.png","awardId": "252","difficulty": 5},
+            {"name": "Booboo","description": "Go to hospital 250 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a3/903.png/200px-903.png","awardId": "903","difficulty": 4},
+            {"name": "Magical Veins","description": "Use 5,000 medical items","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/7.png/200px-7.png","awardId": "7","difficulty": 6},
+            {"name": "Florence Nightingale","description": "Revive 500 players","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/23.png/200px-23.png","awardId": "23","difficulty": 6},
+            {"name": "Second Chance","description": "Revive 1,000 players","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0a/267.png/200px-267.png","awardId": "267","difficulty": 8},
+            {"name": "Vampire","description": "Random chance upon using a blood bag","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/46/406.png/200px-406.png","awardId": "406","difficulty": 7},
+            {"name": "Clotted","description": "Hospitalize yourself by using the wrong blood bag or drinking some Ipecac Syrup.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cb/367.png/200px-367.png","awardId": "367","difficulty": 2},
+            {"name": "Transfusion","description": "Fill 250 blood bags","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/38/418.png/200px-418.png","awardId": "418","difficulty": 5},
+            {"name": "Anaemic","description": "Fill 1,000 blood bags","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/79/398.png/200px-398.png","awardId": "398","difficulty": 7},
+            {"name": "Miracle Worker","description": "Revive 10 people in 10 minutes","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/322.png/200px-322.png","awardId": "322","difficulty": 5},
+            {"name": "Resurrection","description": "Revive someone you've just defeated","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/15/870.png/200px-870.png","awardId": "870","difficulty": 3},
+            {"name": "Crucifixion","description": "Defeat someone you've just revived","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/863.png/200px-863.png","awardId": "863","difficulty": 3},
+            {"name": "Another Brick In The Wall","description": "Reach level 10","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/88/18.png/200px-18.png","awardId": "18","difficulty": 1},
+            {"name": "Half Way There","description": "Reach level 50","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/75/259.png/200px-259.png","awardId": "259","difficulty": 4},
+            {"name": "The Beautiful City","description": "Reach level 75","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c0/13.png/200px-13.png","awardId": "13","difficulty": 7},
+            {"name": "To The Limit","description": "Reach level 100","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/91/265.png/200px-265.png","awardId": "265","difficulty": 10},
+            {"name": "The Whole Nine Yards","description": "Reach level 100","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/92/264.png/200px-264.png","awardId": "264","difficulty": 10},
+            {"name": "Welcome","description": "Be online everyday for 100 days","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/873.png/200px-873.png","awardId": "873","difficulty": 4},
+            {"name": "Couch Potato","description": "Reach 1,000 hours of Time Played on Torn","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0f/245.png/200px-245.png","awardId": "245","difficulty": 3},
+            {"name": "Fascination","description": "Stay married for 250 days","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a4/163.png/200px-163.png","awardId": "163","difficulty": 4},
+            {"name": "Chasm","description": "Stay married for 750 days","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0f/162.png/200px-162.png","awardId": "162","difficulty": 7},
+            {"name": "Stairway To Heaven","description": "Stay married for 1,500 days","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4f/166.png/200px-166.png","awardId": "166","difficulty": 9},
+            {"name": "Alcoholic","description": "Drink 500 bottles of alcohol","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6a/534.png/200px-534.png","awardId": "534","difficulty": 5},
+            {"name": "Sodaholic","description": "Drink 500 cans of energy drinks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/23/538.png/200px-538.png","awardId": "538","difficulty": 8},
+            {"name": "Diabetic","description": "Eat 500 bags of candy","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b0/537.png/200px-537.png","awardId": "537","difficulty": 5},
+            {"name": "Optimist","description": "Find 1,000 items in dump","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8b/238.png/200px-238.png","awardId": "238","difficulty": 6},
+            {"name": "Lavish","description": "Dump an item with a current market value of at least $1,000,000","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3e/743.png/200px-743.png","awardId": "743","difficulty": 3},
+            {"name": "Bibliophile","description": "Read 10 books","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/539.png/200px-539.png","awardId": "539","difficulty": 9},
+            {"name": "Worth It","description": "Use a stat enhancer","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/27/527.png/200px-527.png","awardId": "527","difficulty": 10},
+            {"name": "Eco Friendly","description": "Trash 5,000 items","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c8/271.png/200px-271.png","awardId": "271","difficulty": 5},
+            {"name": "Stinker","description": "Successfully prank someone with Stink Bombs","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7f/678.png/200px-678.png","awardId": "678","difficulty": 2},
+            {"name": "Wipeout","description": "Successfully prank someone with Toilet Paper","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b3/716.png/200px-716.png","awardId": "716","difficulty": 2},
+            {"name": "Bargain Hunter","description": "Win 10 auctions","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/07/273.png/200px-273.png","awardId": "273","difficulty": 5},
+            {"name": "Foul Play","description": "Successfully prank someone with Dog Poop","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5d/717.png/200px-717.png","awardId": "717","difficulty": 2},
+            {"name": "I'm Watching You","description": "Find 50 items in the city","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4a/1.png/200px-1.png","awardId": "1","difficulty": 5},
+            {"name": "Middleman","description": "Have 100 different customers buy from your bazaar","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cc/239.png/200px-239.png","awardId": "239","difficulty": 5},
+            {"name": "Collector","description": "Maintain an impressive display case of collectible items","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ad/699.png/200px-699.png","awardId": "699","difficulty": 7},
+            {"name": "Radaway","description": "Use a Neumune Tablet to reduce radiation poisoning","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2d/882.png/200px-882.png","awardId": "882","difficulty": 4},
+            {"name": "Energize","description": "Use 250 Energy Refills","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/67/266.png/200px-266.png","awardId": "266","difficulty": 10},
+            {"name": "You've Got Some Nerve","description": "Use 250 Nerve Refills","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c3/566.png/200px-566.png","awardId": "566","difficulty": 10},
+            {"name": "Compulsive","description": "Use 250 Casino Refills","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e2/334.png/200px-334.png","awardId": "334","difficulty": 10},
+            {"name": "Seeker","description": "Reach 250 awards (honors and medals)","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c0/229.png/200px-229.png","awardId": "229","difficulty": 6},
+            {"name": "Silicon Valley","description": "Code 100 viruses","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/98/216.png/200px-216.png","awardId": "216","difficulty": 6},
+            {"name": "The Affronted","description": "Irritate all job interviewers","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bb/220.png/200px-220.png","awardId": "220","difficulty": 2},
+            {"name": "Energetic","description": "Achieve the maximum of 1,000 energy","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/2d/395.png/200px-395.png","awardId": "395","difficulty": 5},
+            {"name": "Ecstatic","description": "Achieve the maximum of 99,999 happiness","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/eb/380.png/200px-380.png","awardId": "380","difficulty": 6},
+            {"name": "Christmas in Torn","description": "Login on Christmas Day","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/309.png/200px-309.png","awardId": "309","difficulty": 2},
+            {"name": "Trick or Treat","description": "Login on Halloween","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ab/443.png/200px-443.png","awardId": "443","difficulty": 2},
+            {"name": "Torniversary","description": "Login on November 15th","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d9/459.png/200px-459.png","awardId": "459","difficulty": 2},
+            {"name": "Buffed","description": "Achieve 50 personal perks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/ba/607.png/200px-607.png","awardId": "607","difficulty": 4},
+            {"name": "Web of Perks","description": "Achieve 100 personal perks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/244.png/200px-244.png","awardId": "244","difficulty": 6},
+            {"name": "OP","description": "Achieve 150 personal perks","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8a/620.png/200px-620.png","awardId": "620","difficulty": 9},
+            {"name": "10-stack","description": "Increase a merit upgrade to its maximum","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/617.png/200px-617.png","awardId": "617","difficulty": 5},
+            {"name": "Decorated","description": "Achieve 100 total awards","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/606.png/200px-606.png","awardId": "606","difficulty": 5},
+            {"name": "Honored","description": "Achieve 500 total awards","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8e/614.png/200px-614.png","awardId": "614","difficulty": 9},
+            {"name": "Time Traveller","description": "Survive a Torn City rollback","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/96/312.png/200px-312.png","awardId": "312","difficulty": 10},
+            {"name": "Fresh Start","description": "Reset your merits","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/26/288.png/200px-288.png","awardId": "288","difficulty": 1},
+            {"name": "Tornication","description": "Login on Valentine's Day","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b4/731.png/200px-731.png","awardId": "731","difficulty": 2},
+            {"name": "Resolution","description": "Login on New Year's Day","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e7/375.png/200px-375.png","awardId": "375","difficulty": 2},
+            {"name": "Leaderboard","description": "Achieve top 250 in one of the personal Hall of Fame leaderboards","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bc/700.png/200px-700.png","awardId": "700","difficulty": 10},
+            {"name": "RNG","description": "Who knows?","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/55/839.png/200px-839.png","awardId": "839","difficulty": 7},
+            {"name": "Historian","description": "Read a chronicle","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/93/845.png/200px-845.png","awardId": "845","difficulty": 1},
+            {"name": "Nice","description": "Nice","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6a/888.png/200px-888.png","awardId": "888","difficulty": 2},
+            {"name": "Intern","description": "100 job points used","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/09/4.png/200px-4.png","awardId": "4","difficulty": 2},
+            {"name": "Stuck In a Rut","description": "1,000 job points used","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/164.png/200px-164.png","awardId": "164","difficulty": 4},
+            {"name": "Overtime","description": "10,000 job points used","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/dc/742.png/200px-742.png","awardId": "742","difficulty": 7},
+            {"name": "Journalist","description": "Have an article published","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/82/5.png/200px-5.png","awardId": "5","difficulty": 9},
+            {"name": "Velutinous","description": "Have a comic published","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0b/167.png/200px-167.png","awardId": "167","difficulty": 9},
+            {"name": "Luxury Real Estate","description": "Own a Private Island with a Airstrip","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/9.png/200px-9.png","awardId": "9","difficulty": 7},
+            {"name": "The High Life","description": "Own a Private Island with a Yacht","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/36/258.png/200px-258.png","awardId": "258","difficulty": 8},
+            {"name": "Landlord","description": "Lease one of your properties to someone.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/53/860.png/200px-860.png","awardId": "860","difficulty": 2},
+            {"name": "Protege","description": "Complete the mission introduction: Duke","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/371.png/200px-371.png","awardId": "371","difficulty": 1},
+            {"name": "Mercenary","description": "Complete 1,000 mission contracts","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/68/664.png/200px-664.png","awardId": "664","difficulty": 7},
+            {"name": "Task Master","description": "Earn 10,000 mission credits","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/00/636.png/200px-636.png","awardId": "636","difficulty": 7},
+            {"name": "Driving Elite","description": "Reach Class A","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/71/21.png/200px-21.png","awardId": "21","difficulty": 6},
+            {"name": "Redline","description": "250 wins in the same car","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f5/274.png/200px-274.png","awardId": "274","difficulty": 7},
+            {"name": "Motorhead","description": "Achieve a driver skill of 10","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/7a/572.png/200px-572.png","awardId": "572","difficulty": 7},
+            {"name": "Wrecked","description": "Crash during a race","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c9/734.png/200px-734.png","awardId": "734","difficulty": 3},
+            {"name": "Checkered Past","description": "Win 100 races","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8c/571.png/200px-571.png","awardId": "571","difficulty": 5},
+            {"name": "On Track","description": "Earn 2,500 Racing Points","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/45/581.png/200px-581.png","awardId": "581","difficulty": 8},
+            {"name": "Two's Company","description": "Refer 1 player who reaches level 10","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/217.png/200px-217.png","awardId": "217","difficulty": 4},
+            {"name": "Three's A Crowd","description": "Refer 2 players who reach level 10","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/218.png/200px-218.png","awardId": "218","difficulty": 6},
+            {"name": "Social Butterfly","description": "Refer 3 players who reach level 10","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a4/219.png/200px-219.png","awardId": "219","difficulty": 8},
+            {"name": "Pyramid Scheme","description": "Have one of your referrals refer another player who goes on to reach level 10","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/68/246.png/200px-246.png","awardId": "246","difficulty": 8},
+            {"name": "Allure","description": "Make an entry for Mr/Miss Torn","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cb/213.png/200px-213.png","awardId": "213","difficulty": 2},
+            {"name": "Good Friday","description": "Exchange all eggs for a gold one in the Easter Egg hunt competition","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b3/222.png/200px-222.png","awardId": "222","difficulty": 6},
+            {"name": "KIA","description": "Collect 50 dog tags in the Dog Tags competition (must be holding 50 tags at once)","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/21/221.png/200px-221.png","awardId": "221","difficulty": 6},
+            {"name": "Departure","description": "Collect 250 dog tags in the Dog Tags competition (must be holding 250 tags at once)","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/45/277.png/200px-277.png","awardId": "277","difficulty": 10},
+            {"name": "Mission Accomplished","description": "Finish the Elimination competition with your team 1st, 2nd or 3rd.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/64/212.png/200px-212.png","awardId": "212","difficulty": 6},
+            {"name": "Purple Heart","description": "Make 50 attacks against enemy team members in the Elimination competition.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/226.png/200px-226.png","awardId": "226","difficulty": 5},
+            {"name": "Supremacy","description": "Finish the Elimination competition within the top 5% of attacking players in your team.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6c/280.png/200px-280.png","awardId": "280","difficulty": 9},
+            {"name": "Domination","description": "Finish the Elimination competition with your team in 1st place.","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cb/279.png/200px-279.png","awardId": "279","difficulty": 7},
+            {"name": "Champion","description": "Win a community event","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/16/330.png/200px-330.png","awardId": "330","difficulty": 10},
+            {"name": "Phantastic","description": "Upgrade your Halloween Basket to Frightful Trick or Treat","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d6/969.png/200px-969.png","awardId": "969","difficulty": 5},
+            {"name": "Something Humerus","description": "Upgrade your Halloween Basket to Terrifying Trick or Treat","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/964.png/200px-964.png","awardId": "964","difficulty": 7},
+            {"name": "Oh My Gourd!","description": "Upgrade your Halloween Basket to Nightmarish Trick or Treat","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0f/966.png/200px-966.png","awardId": "966","difficulty": 9},
+            {"name": "Globule","description": "Purchased for 3 tokens from the Token Shop or for 500 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/fa/283.png/200px-283.png","awardId": "283","difficulty": 2},
+            {"name": "Retro","description": "Purchased for 4 tokens from the Token Shop or for 500 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f1/308.png/200px-308.png","awardId": "308","difficulty": 3},
+            {"name": "Acute","description": "Purchased for 4 tokens from the Token Shop or for 500 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/f0/298.png/200px-298.png","awardId": "298","difficulty": 3},
+            {"name": "Serenity","description": "Purchased for 5 tokens from the Token Shop or for 600 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3d/313.png/200px-313.png","awardId": "313","difficulty": 4},
+            {"name": "The Socialist","description": "Purchased for 5 tokens from the Token Shop or for 600 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/39/223.png/200px-223.png","awardId": "223","difficulty": 4},
+            {"name": "Jack Of All Trades","description": "Purchased for 5 tokens from the Token Shop or for 600 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d3/214.png/200px-214.png","awardId": "214","difficulty": 4},
+            {"name": "Futurity","description": "Purchased for 6 tokens from the Token Shop or for 700 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a5/318.png/200px-318.png","awardId": "318","difficulty": 5},
+            {"name": "Constellations","description": "Purchased for 7 tokens from the Token Shop or for 700 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0d/297.png/200px-297.png","awardId": "297","difficulty": 5},
+            {"name": "Parallel","description": "Purchased for 8 tokens from the Token Shop or for 700 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d4/281.png/200px-281.png","awardId": "281","difficulty": 6},
+            {"name": "Labyrinth","description": "Purchased for 9 tokens from the Token Shop or for 700 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/40/215.png/200px-215.png","awardId": "215","difficulty": 6},
+            {"name": "Glimmer","description": "Purchased for 10 tokens from the Token Shop or for 800 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/df/315.png/200px-315.png","awardId": "315","difficulty": 7},
+            {"name": "Proven Capacity","description": "Purchased for 10 tokens from the Token Shop or for 800 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e4/224.png/200px-224.png","awardId": "224","difficulty": 7},
+            {"name": "Master Of One","description": "Purchased for 10 tokens from the Token Shop or for 800 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/26/225.png/200px-225.png","awardId": "225","difficulty": 7},
+            {"name": "Globally Effective","description": "Purchased for 10 tokens from the Token Shop or for 800 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/0a/278.png/200px-278.png","awardId": "278","difficulty": 7},
+            {"name": "Supernova","description": "Purchased for 12 tokens from the Token Shop or for 900 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4e/321.png/200px-321.png","awardId": "321","difficulty": 8},
+            {"name": "Pepperoni","description": "Purchased for 13 tokens from the Token Shop or for 900 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a3/294.png/200px-294.png","awardId": "294","difficulty": 8},
+            {"name": "Electric Dream","description": "Purchased for 15 tokens from the Token Shop or for 1000 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d5/284.png/200px-284.png","awardId": "284","difficulty": 9},
+            {"name": "Resistance","description": "Purchased for 15 tokens from the Token Shop or for 1000 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b8/306.png/200px-306.png","awardId": "306","difficulty": 9},
+            {"name": "Brainz","description": "Purchased for 20 tokens from the Token Shop or for 1300 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/31/311.png/200px-311.png","awardId": "311","difficulty": 10},
+            {"name": "Survivor","description": "Purchased for 25 tokens from the Token Shop or for 1500 points from the Points Building","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ea/263.png/200px-263.png","awardId": "263","difficulty": 10},
+            {"name": "Backdrop","description": "Unlock a backdrop from the Token Shop","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/ae/730.png/200px-730.png","awardId": "730","difficulty": 4},
+            {"name": "Hairy","description": "Unlock a hairstyle from the Token Shop","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6b/729.png/200px-729.png","awardId": "729","difficulty": 4},
+            {"name": "Mile High Club","description": "Travel 100 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/59/11.png/200px-11.png","awardId": "11","difficulty": 3},
+            {"name": "There And Back","description": "Travel 1,000 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9d/165.png/200px-165.png","awardId": "165","difficulty": 6},
+            {"name": "Cascado","description": "Travel to Mexico 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/83/131.png/200px-131.png","awardId": "131","difficulty": 4},
+            {"name": "Toronto","description": "Travel to Canada 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d1/139.png/200px-139.png","awardId": "139","difficulty": 4},
+            {"name": "Shark Bait","description": "Travel to Cayman Islands 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/bb/272.png/200px-272.png","awardId": "272","difficulty": 4},
+            {"name": "Hula","description": "Travel to Hawaii 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/6c/133.png/200px-133.png","awardId": "133","difficulty": 4},
+            {"name": "British Pride","description": "Travel to England 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/135.png/200px-135.png","awardId": "135","difficulty": 4},
+            {"name": "Like The Celebs","description": "Travel to Switzerland 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9d/137.png/200px-137.png","awardId": "137","difficulty": 4},
+            {"name": "Maradona","description": "Travel to Argentina 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/ca/130.png/200px-130.png","awardId": "130","difficulty": 4},
+            {"name": "The Rising Sun","description": "Travel to Japan 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3e/134.png/200px-134.png","awardId": "134","difficulty": 4},
+            {"name": "Year Of The Dragon","description": "Travel to China 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4a/138.png/200px-138.png","awardId": "138","difficulty": 4},
+            {"name": "Land Of Promise","description": "Travel to Dubai 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/132.png/200px-132.png","awardId": "132","difficulty": 4},
+            {"name": "Cape Town","description": "Travel to South Africa 50 times","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/de/136.png/200px-136.png","awardId": "136","difficulty": 4},
+            {"name": "Tourist","description": "Spend 7 days in the air","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/84/549.png/200px-549.png","awardId": "549","difficulty": 5},
+            {"name": "Frequent Flyer","description": "Spend 31 days in the air","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/14/567.png/200px-567.png","awardId": "567","difficulty": 7},
+            {"name": "Globetrotter","description": "Spend 365 days in the air","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/43/557.png/200px-557.png","awardId": "557","difficulty": 10},
+            {"name": "Mule","description": "Import 100 items from abroad","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c8/541.png/200px-541.png","awardId": "541","difficulty": 3},
+            {"name": "Smuggler","description": "Import 1,000 items from abroad","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3d/542.png/200px-542.png","awardId": "542","difficulty": 6},
+            {"name": "Trafficker","description": "Import 10,000 items from abroad","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/70/543.png/200px-543.png","awardId": "543","difficulty": 9},
+            {"name": "Souvenir","description": "Purchase the perfect souvenir abroad","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/5b/853.png/200px-853.png","awardId": "853","difficulty": 3},
+            {"name": "International","description": "Defeat 100 people while abroad","imageUrl": "https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/69/846.png/200px-846.png","awardId": "846","difficulty": 6}
+        ];
 
-        let GLOBAL_MERITS = []; let USER_OWNED_IDS = new Set(); let CATEGORIES = new Set();
+        // Ensure corrupted cache is wiped by changing storage key name
+        let USER_PREFS = JSON.parse(localStorage.getItem('tornMeritHunterPrefsV2')) || { hidden: [], customDiffs: {} };
+
+        function savePrefs() {
+            localStorage.setItem('tornMeritHunterPrefsV2', JSON.stringify(USER_PREFS));
+            renderMerits();
+        }
+
         function capitalize(str) { return !str ? "Misc" : str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(); }
         
-        function calculateDifficulty(merit) {
-            const name = merit.name.toLowerCase(); const desc = merit.description.toLowerCase();
-            if (name.includes("lottery") || desc.includes("level 100") || name === "god of war" || desc.includes("stat cap")) return 10;
-            if (desc.includes("class a") && desc.includes("win")) return 9; 
-            if (desc.includes("100,000 rounds")) return 9;
-            let score = 5; 
-            if (desc.includes("equip") || desc.includes("buy") || desc.includes("eat") || desc.includes("drink") || desc.includes("level 5") || desc.includes("level 10") || desc.includes("level 20") || (desc.includes("join") && desc.includes("faction"))) score = 1;
-            if (desc.includes("travel") || desc.includes("visit")) score = 2;
-            if (desc.includes("bounties") && desc.includes("collect")) score = 3;
-            if ((desc.includes("weapon experience") && desc.includes("100%")) || (desc.includes("master") && desc.includes("bachelor"))) score = 4; 
-            if (desc.includes("finish") && desc.includes("hit")) score = 5;
-            if (desc.includes("networth")) { score = desc.includes("1,000,000,000") ? 7 : 4; }
-            if (desc.includes("committed") || desc.includes("achieve")) {
-                const numberMatch = desc.match(/([\d,]+)/);
-                if (numberMatch) { const num = parseInt(numberMatch[0].replace(/,/g, '')); score = num >= 10000 ? 8 : num >= 5000 ? 7 : num >= 2500 ? 6 : num >= 1000 ? 5 : num >= 100 ? 3 : 2; }
-            }
-            if (desc.includes("days") && desc.includes("log in") && desc.includes("365")) score = 5; 
-            if (desc.includes("chain") && desc.includes("10,000")) score = 9;
-            return Math.max(1, Math.min(10, score));
+        function getCrimeVersion(desc) {
+            const lower = desc.toLowerCase();
+            const c2Keywords = ["skill level of 100", "bootlegging", "graffiti", "shoplifting", "pickpocket", "skimming", "burglary", "hustling", "disposal", "cracking", "forgery", "scamming", "rotten food", "dead body in acid", "password characters", "dvd store", "police officer's badge"];
+            if (c2Keywords.some(kw => lower.includes(kw))) return 2;
+            
+            const c1Keywords = ["thefts crimes", "drug deals crimes", "computer crimes", "murders crimes", "fraud crimes", "auto theft crimes", "other\" crimes", "selling illegal products crimes"];
+            if (c1Keywords.some(kw => lower.includes(kw))) return 1;
+            
+            return null;
         }
+
+        let GLOBAL_MERITS = []; 
+        let USER_OWNED_IDS = new Set(); 
+        let CATEGORIES = new Set();
 
         async function fetchMerits() {
             const apiKey = document.getElementById('api-key').value.trim();
             if (!apiKey) { alert("Please enter a valid API Key."); return; }
-            document.getElementById('loader').classList.remove('hidden'); document.getElementById('merit-list').innerHTML = ''; document.getElementById('empty-state').classList.add('hidden'); document.getElementById('fetch-btn').disabled = true; document.getElementById('fetch-btn').innerText = "Loading...";
+            
+            document.getElementById('loader').classList.remove('hidden'); 
+            document.getElementById('merit-list').innerHTML = ''; 
+            document.getElementById('empty-state').classList.add('hidden'); 
+            document.getElementById('fetch-btn').disabled = true; 
+            document.getElementById('fetch-btn').innerText = "Fetching...";
+
             try {
-                const [tornRes, userRes] = await Promise.all([fetch(`https://api.torn.com/v2/torn/honors?key=${apiKey}`).then(r => r.json()), fetch(`https://api.torn.com/v2/user/honors?key=${apiKey}`).then(r => r.json())]);
-                if (tornRes.error) throw new Error(tornRes.error.error); if (userRes.error) throw new Error(userRes.error.error);
-                USER_OWNED_IDS = new Set(userRes.honors.map(h => typeof h === 'object' ? h.id : h));
-                GLOBAL_MERITS = tornRes.honors.filter(m => !m.type || m.type.title.toLowerCase() !== 'default').map(m => ({ id: m.id, name: m.name, description: m.description, category: capitalize(m.type ? m.type.title : "Misc"), difficulty: calculateDifficulty(m) }));
-                CATEGORIES = new Set(GLOBAL_MERITS.map(m => m.category)); populateFilters();
+                const [tHonors, uHonors, tMedals, uMedals] = await Promise.all([
+                    fetch(`https://api.torn.com/v2/torn/honors?key=${apiKey}`).then(r => r.json()),
+                    fetch(`https://api.torn.com/v2/user/honors?key=${apiKey}`).then(r => r.json()),
+                    fetch(`https://api.torn.com/v2/torn/medals?key=${apiKey}`).then(r => r.json()),
+                    fetch(`https://api.torn.com/v2/user/medals?key=${apiKey}`).then(r => r.json())
+                ]);
+
+                if (tHonors.error) throw new Error(tHonors.error.error); 
+
+                // Tag owned IDs with their type to prevent collisions (e.g. "honor_231" and "medal_231")
+                const ownedH = uHonors.honors ? uHonors.honors.map(h => 'honor_' + (typeof h === 'object' ? h.id : h)) : [];
+                const ownedM = uMedals.medals ? uMedals.medals.map(m => 'medal_' + (typeof m === 'object' ? m.id : m)) : [];
+                USER_OWNED_IDS = new Set([...ownedH, ...ownedM]);
+
+                const parsedHonors = tHonors.honors.filter(m => !m.type || m.type.title.toLowerCase() !== 'default').map(m => mapItem(m, 'honor'));
+                const parsedMedals = (tMedals.medals || []).map(m => mapItem(m, 'medal'));
+
+                GLOBAL_MERITS = [...parsedHonors, ...parsedMedals];
+                CATEGORIES = new Set(GLOBAL_MERITS.map(m => m.category)); 
+                
+                populateFilters();
                 document.getElementById('filters-area').classList.remove('hidden'); 
                 document.getElementById('stats-bar').classList.remove('hidden');
                 renderMerits();
-            } catch (error) { console.error(error); alert("Error: " + error.message); } 
-            finally { document.getElementById('loader').classList.add('hidden'); document.getElementById('fetch-btn').disabled = false; document.getElementById('fetch-btn').innerText = "Scan Merits"; }
+
+            } catch (error) { 
+                console.error(error); alert("API Error: " + error.message); 
+            } finally { 
+                document.getElementById('loader').classList.add('hidden'); 
+                document.getElementById('fetch-btn').disabled = false; 
+                document.getElementById('fetch-btn').innerText = "Initialize Scan"; 
+            }
+        }
+
+        function mapItem(item, typeStr) {
+            // Find hardcoded match from JSON
+            const hardcodedRecord = AWARD_DATA.find(a => a.name.toLowerCase() === item.name.toLowerCase());
+            
+            const baseDiff = hardcodedRecord && hardcodedRecord.difficulty ? hardcodedRecord.difficulty : 5;
+            const targetImage = hardcodedRecord && hardcodedRecord.imageUrl ? hardcodedRecord.imageUrl : null;
+            const crimeTag = getCrimeVersion(item.description);
+
+            return {
+                uid: typeStr + '_' + item.id, // Unique ID string to fix collision bugs
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                category: typeStr === 'medal' ? 'Medal' : capitalize(item.type ? item.type.title : "Misc"),
+                baseDiff: baseDiff,
+                crimeVersion: crimeTag,
+                awardType: typeStr,
+                imgUrl: targetImage 
+            };
         }
 
         function populateFilters() {
-            const catSelect = document.getElementById('cat-filter'); catSelect.innerHTML = '<option value="all">All Categories</option>';
+            const catSelect = document.getElementById('cat-filter'); 
+            catSelect.innerHTML = '<option value="all">All Data</option>';
             Array.from(CATEGORIES).sort().forEach(cat => { catSelect.innerHTML += `<option value="${cat}">${cat}</option>`; });
+        }
+
+        function adjustDiff(uid, delta) {
+            const merit = GLOBAL_MERITS.find(m => m.uid === uid);
+            if (!merit) return;
+            
+            let current = USER_PREFS.customDiffs[uid];
+            if (current === undefined) current = merit.baseDiff;
+            
+            let newDiff = current + delta;
+            if (newDiff < 1) newDiff = 1;
+            if (newDiff > 10) newDiff = 10;
+            
+            if (Number(newDiff) === Number(merit.baseDiff)) {
+                delete USER_PREFS.customDiffs[uid];
+            } else {
+                USER_PREFS.customDiffs[uid] = Number(newDiff);
+            }
+            
+            savePrefs();
+        }
+
+        function toggleHide(uid) {
+            if (USER_PREFS.hidden.includes(uid)) {
+                USER_PREFS.hidden = USER_PREFS.hidden.filter(h => h !== uid);
+            } else {
+                USER_PREFS.hidden.push(uid);
+            }
+            savePrefs();
         }
 
         function renderMerits() {
             const listDiv = document.getElementById('merit-list');
             const hideOwned = document.getElementById('hide-owned').checked;
+            const showHidden = document.getElementById('show-hidden').checked;
             const catFilter = document.getElementById('cat-filter').value;
             const sortFilter = document.getElementById('sort-filter').value;
-            listDiv.innerHTML = '';
+            const crimeFilter = document.getElementById('crime-filter').value;
+            
+            let filtered = GLOBAL_MERITS.filter(m => {
+                const isHidden = USER_PREFS.hidden.includes(m.uid);
+                if (!showHidden && isHidden) return false;
+                if (showHidden && !isHidden) return false;
 
-            let filtered = GLOBAL_MERITS.filter(m => (hideOwned ? !USER_OWNED_IDS.has(m.id) : true) && (catFilter !== 'all' ? m.category === catFilter : true));
-            document.getElementById('total-count').innerText = `${filtered.length} Merits Found`;
-            document.getElementById('completion-rate').innerText = `${filtered.length} Remaining`;
+                if (hideOwned && USER_OWNED_IDS.has(m.uid)) return false;
+                if (catFilter !== 'all' && m.category !== catFilter) return false;
+                
+                if (crimeFilter === 'crime1' && m.crimeVersion !== 1) return false;
+                if (crimeFilter === 'crime2' && m.crimeVersion !== 2) return false;
+                if (crimeFilter === 'nocrime' && m.crimeVersion !== null) return false;
+
+                return true;
+            });
+
+            filtered.forEach(m => {
+                if (USER_PREFS.customDiffs[m.uid] !== undefined) {
+                    if (Number(USER_PREFS.customDiffs[m.uid]) === Number(m.baseDiff)) {
+                        delete USER_PREFS.customDiffs[m.uid];
+                        m.displayDiff = m.baseDiff;
+                        m.isCustom = false;
+                    } else {
+                        m.displayDiff = Number(USER_PREFS.customDiffs[m.uid]);
+                        m.isCustom = true;
+                    }
+                } else {
+                    m.displayDiff = m.baseDiff;
+                    m.isCustom = false;
+                }
+            });
+
+            document.getElementById('total-count').innerText = `${filtered.length} Targets`;
+            document.getElementById('completion-rate').innerText = `${filtered.length} Pending`;
 
             filtered.sort((a, b) => {
                 if (sortFilter === 'name') return a.name.localeCompare(b.name);
-                if (sortFilter === 'difficulty_asc') return a.difficulty - b.difficulty;
-                if (sortFilter === 'difficulty_desc') return b.difficulty - a.difficulty;
+                if (sortFilter === 'difficulty_asc') return a.displayDiff - b.displayDiff;
+                if (sortFilter === 'difficulty_desc') return b.displayDiff - a.displayDiff;
                 return 0;
             });
 
-            if (filtered.length === 0) { document.getElementById('empty-state').classList.remove('hidden'); return; } 
-            else { document.getElementById('empty-state').classList.add('hidden'); }
+            if (filtered.length === 0) { 
+                document.getElementById('empty-state').classList.remove('hidden'); 
+                listDiv.innerHTML = '';
+                return; 
+            } else { 
+                document.getElementById('empty-state').classList.add('hidden'); 
+            }
+
+            let htmlBuffer = '';
 
             filtered.forEach(m => {
-                const isOwned = USER_OWNED_IDS.has(m.id);
-                const opacityClass = isOwned ? 'opacity-40 grayscale' : 'opacity-100';
+                const isOwned = USER_OWNED_IDS.has(m.uid);
+                const isHidden = USER_PREFS.hidden.includes(m.uid);
+                const opacityClass = isOwned || isHidden ? 'opacity-40 grayscale' : 'opacity-100';
                 
-                const honorBarImg = HONOR_BARS[m.name];
-                const honorBarHtml = honorBarImg ? `<img src="${honorBarImg}" alt="${m.name} bar" class="w-full mt-3 mb-3 border border-[#333] rounded shadow-md object-cover h-[45px]">` : '';
+                const honorBarHtml = m.imgUrl ? `<img src="${m.imgUrl}" class="w-full mt-3 mb-3 border border-[#333] rounded object-cover h-[45px]" onerror="this.style.display='none';">` : '';
+                
+                // Purely restricted to Medals. Destroys itself completely on error to leave nothing behind.
+                const medalIconHtml = m.awardType === 'medal' ? `
+                    <div class="w-12 h-12 bg-[#111] border border-[#333] rounded flex items-center justify-center p-1.5 relative mr-3">
+                        <img src="https://www.torn.com/images/awards/medals/${m.id}.png" class="w-full h-full object-contain drop-shadow-md" onerror="this.parentElement.style.display='none';">
+                    </div>
+                ` : '';
 
-                const html = `
-                    <div class="torn-card relative border border-[#333] p-0 flex flex-col justify-between h-full group diff-${m.difficulty} ${opacityClass} rounded shadow-lg overflow-hidden">
+                htmlBuffer += `
+                    <div class="torn-card relative border border-[#333] p-0 flex flex-col justify-between h-full diff-${m.displayDiff} ${opacityClass} rounded shadow-lg overflow-hidden">
                         
                         <div class="h-1.5 w-full bg-current transition-colors"></div>
                         
                         <div class="p-5 flex-grow">
                             <div class="flex justify-between items-start border-b border-[#333] pb-3 mb-3">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-[#111] border border-[#333] rounded flex items-center justify-center p-2">
-                                        <img src="https://www.torn.com/images/awards/honors/${m.id}.png" class="w-full h-full object-contain drop-shadow-md" onerror="this.parentElement.style.display='none';">
-                                    </div>
+                                <div class="flex items-center">
+                                    ${medalIconHtml}
                                     <div>
-                                        <span class="text-[10px] text-[#666] font-bold block mb-1">ID: ${m.id}</span>
-                                        <span class="text-[11px] font-bold px-1.5 py-0.5 bg-[#333] text-[#ccc] uppercase rounded">${m.category}</span>
+                                        <span class="text-[10px] text-[#666] font-bold block mb-1 uppercase">${m.awardType}: ${m.id}</span>
+                                        <span class="text-[10px] font-bold px-1.5 py-0.5 bg-[#333] text-[#ccc] uppercase rounded">${m.category}</span>
                                     </div>
                                 </div>
-                                <div class="text-right">
-                                    <span class="text-[10px] text-[#666] font-bold uppercase block mb-1">Difficulty</span>
-                                    <span class="text-sm font-bold bg-[#111] px-2 py-0.5 rounded border border-[#333] block">${m.difficulty}</span>
+                                <div class="flex flex-col items-end">
+                                    <span class="text-[9px] text-[#666] font-bold uppercase mb-1 tracking-wider">Diff</span>
+                                    <div class="flex items-center gap-1">
+                                        <button onclick="adjustDiff('${m.uid}', -1)" class="text-[#888] hover:text-white px-1 leading-none text-lg">&lsaquo;</button>
+                                        <span class="text-sm font-bold bg-[#111] px-2 py-0.5 rounded border border-[#333] min-w-[30px] text-center relative">
+                                            ${m.displayDiff}${m.isCustom ? '<span class="text-blue-400 absolute -top-1 -right-2 font-black text-xs">*</span>' : ''}
+                                        </span>
+                                        <button onclick="adjustDiff('${m.uid}', 1)" class="text-[#888] hover:text-white px-1 leading-none text-lg">&rsaquo;</button>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <h3 class="text-lg font-bold text-white tracking-tight leading-tight group-hover:text-white transition-colors">${m.name}</h3>
-                            
+                            <h3 class="text-lg font-bold text-white tracking-tight leading-tight transition-colors">${m.name}</h3>
                             ${honorBarHtml}
-                            
-                            <p class="text-sm text-[#999] mt-2 leading-relaxed border-l-2 border-[#444] pl-3">${m.description}</p>
+                            <p class="text-[13px] text-[#999] mt-2 leading-relaxed border-l-2 border-[#444] pl-3">${m.description}</p>
                         </div>
                         
                         <div class="bg-[#111] p-3 flex justify-between items-center border-t border-[#333]">
                             ${isOwned 
-                                ? '<span class="text-xs font-bold text-green-600 uppercase flex items-center gap-1"><span class="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span> ACHIEVED</span>' 
-                                : '<span class="text-xs font-bold text-red-700 uppercase flex items-center gap-1"><span class="w-2 h-2 bg-red-700 rounded-full"></span> LOCKED</span>'}
+                                ? '<span class="text-[10px] font-bold text-green-600 uppercase flex items-center gap-1 tracking-wider"><span class="w-2 h-2 bg-green-600 rounded-full animate-pulse"></span> ACHIEVED</span>' 
+                                : '<span class="text-[10px] font-bold text-red-700 uppercase flex items-center gap-1 tracking-wider"><span class="w-2 h-2 bg-red-700 rounded-full"></span> LOCKED</span>'}
+                            
+                            <button onclick="toggleHide('${m.uid}')" class="text-[10px] font-bold uppercase px-3 py-1 bg-[#1a1a1a] text-[#888] hover:text-white border border-[#333] rounded transition-colors tracking-widest">
+                                ${isHidden ? 'Restore' : 'Hide'}
+                            </button>
                         </div>
                     </div>
                 `;
-                listDiv.innerHTML += html;
             });
+            
+            listDiv.innerHTML = htmlBuffer;
         }
     </script>
 </body>
