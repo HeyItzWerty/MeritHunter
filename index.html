@@ -14,7 +14,7 @@ a{color:inherit;text-decoration:none}button{cursor:pointer;font-family:inherit}s
 ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#111}::-webkit-scrollbar-thumb{background:#444;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#666}
 .wrap{max-width:1200px;margin:0 auto}
 .flex{display:flex}.flex-col{flex-direction:column}.items-center{align-items:center}.items-start{align-items:start}.items-end{align-items:end}
-.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}
+.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}
 .grow{flex-grow:1}.w-full{width:100%}
 .grid{display:grid}.grid-1{grid-template-columns:1fr}
 @media(min-width:768px){.md-grid-2{grid-template-columns:repeat(2,1fr)}.md-row{flex-direction:row}.md-w-auto{width:auto}}
@@ -60,11 +60,13 @@ a{color:inherit;text-decoration:none}button{cursor:pointer;font-family:inherit}s
 .torn-card:hover{transform:translateY(-2px);z-index:10;background:#1e1e1e}
 .torn-card .accent-bar{height:4px;width:100%;background:var(--rc,#333)}
 .torn-card .rarity-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:3px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
-.chain-bar{height:3px;background:#222;border-radius:2px;overflow:hidden;margin-top:4px}
-.chain-fill{height:100%;border-radius:2px;background:var(--rc,#444)}
 .progress-wrap{margin-top:10px;padding-top:8px;border-top:1px solid #222}
 .progress-bar{height:5px;background:#222;border-radius:3px;overflow:hidden;margin-top:4px}
 .progress-fill{height:100%;border-radius:3px;background:var(--rc,#444);transition:width .3s}
+
+/* Honor bar image — mini with hover enlarge */
+.honor-bar{width:100%;height:32px;object-fit:cover;border:1px solid #333;border-radius:3px;margin-top:8px;display:block;transition:transform .25s ease,box-shadow .25s ease;transform-origin:center center;cursor:zoom-in}
+.honor-bar:hover{transform:scaleX(1.08) scaleY(1.6);box-shadow:0 6px 24px rgba(0,0,0,.6);z-index:50;position:relative;border-color:#555}
 
 .tip{position:relative;display:inline-block;cursor:help}
 .tip .tip-text{visibility:hidden;width:280px;background:#000;color:#fff;text-align:left;border-radius:6px;padding:10px;position:absolute;z-index:20;top:100%;left:50%;margin-left:-140px;margin-top:8px;opacity:0;transition:opacity .3s;border:1px solid #333;font-size:.85rem;line-height:1.4;box-shadow:0 4px 6px rgba(0,0,0,.5)}
@@ -85,97 +87,39 @@ a{color:inherit;text-decoration:none}button{cursor:pointer;font-family:inherit}s
     <header class="mb-8 text-center border-b-333 pb-8">
         <h1 class="text-5xl font-extrabold c-white mb-1 tracking-tight"><span class="c-888">MERIT</span> HUNTER</h1>
         <p class="text-sm c-gray5 mb-2">Made by <a href="https://www.torn.com/profiles.php?XID=3626448" target="_blank" class="c-888 font-bold" style="transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">HeyItzWerty [3626448]</a></p>
-        <div class="tip inline-block">
-            <span class="text-xs c-gray4" style="border-bottom:1px dotted #6b7280">How does this work?</span>
-            <div class="tip-text">
-                <strong class="block c-999 mb-1">Privacy &amp; Security</strong>
-                Runs entirely in your browser. Your API Key fetches data directly from Torn. No external servers.
-                <br><br>
-                <strong class="block c-999 mb-1">Rarity &amp; Progress</strong>
-                Rarity comes from live circulation data. Staged awards auto-collapse to show only your next target with live progress from your stats.
-            </div>
+        <div class="tip inline-block"><span class="text-xs c-gray4" style="border-bottom:1px dotted #6b7280">How does this work?</span>
+            <div class="tip-text"><strong class="block c-999 mb-1">Privacy &amp; Security</strong>Runs entirely in your browser. Your API Key fetches data directly from Torn. No external servers.<br><br><strong class="block c-999 mb-1">Rarity &amp; Progress</strong>Rarity from live circulation data. Staged awards auto-collapse. Progress bars from your stats.</div>
         </div>
     </header>
-
     <div class="panel mb-8">
         <div class="flex flex-col gap-4 md-row items-end">
-            <div class="grow">
-                <label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-widest">API Key (Limited Access)</label>
-                <input type="password" id="api-key" class="card-input" placeholder="Enter Limited API Key">
-            </div>
+            <div class="grow"><label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-widest">API Key (Limited Access)</label><input type="password" id="api-key" class="card-input" placeholder="Enter Limited API Key"></div>
             <button onclick="fetchAll()" id="fetch-btn" class="btn w-full md-w-auto">Initialize Scan</button>
         </div>
         <div id="filters-area" class="hidden pt-4 border-t-333" style="margin-top:1rem">
             <div class="grid grid-1 md-grid-2 lg-grid-3 gap-4 mb-3">
-                <div>
-                    <label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Type</label>
-                    <select id="type-filter" onchange="render()" class="card-select">
-                        <option value="all">All (Honors + Medals)</option>
-                        <option value="honor">Honors Only</option>
-                        <option value="medal">Medals Only</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Category</label>
-                    <select id="cat-filter" onchange="render()" class="card-select"><option value="all">All Categories</option></select>
-                </div>
-                <div>
-                    <label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Crime Filter</label>
-                    <select id="crime-filter" onchange="render()" class="card-select">
-                        <option value="all">Show All</option>
-                        <option value="crime1">Crimes 1.0 Only</option>
-                        <option value="crime2">Crimes 2.0 Only</option>
-                        <option value="nocrime">Exclude Crimes</option>
-                    </select>
-                </div>
+                <div><label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Type</label><select id="type-filter" onchange="render()" class="card-select"><option value="all">All (Honors + Medals)</option><option value="honor">Honors Only</option><option value="medal">Medals Only</option></select></div>
+                <div><label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Category</label><select id="cat-filter" onchange="render()" class="card-select"><option value="all">All Categories</option></select></div>
+                <div><label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Crime Filter</label><select id="crime-filter" onchange="render()" class="card-select"><option value="all">Show All</option><option value="crime1">Crimes 1.0 Only</option><option value="crime2">Crimes 2.0 Only</option><option value="nocrime">Exclude Crimes</option></select></div>
             </div>
             <div class="grid grid-1 md-grid-2 lg-grid-3 gap-4">
-                <div>
-                    <label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Sort</label>
-                    <select id="sort-filter" onchange="render()" class="card-select">
-                        <option value="easiest">Easiest First (most common)</option>
-                        <option value="hardest">Hardest First (rarest)</option>
-                        <option value="name">Alphabetical</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Rarity</label>
-                    <select id="rarity-filter" onchange="render()" class="card-select">
-                        <option value="all">All Rarities</option>
-                        <option value="extremely_rare">Extremely Rare</option>
-                        <option value="very_rare">Very Rare</option>
-                        <option value="rare">Rare</option>
-                        <option value="limited">Limited</option>
-                        <option value="uncommon">Uncommon</option>
-                        <option value="common">Common</option>
-                        <option value="unknown">Unknown / Unreleased</option>
-                    </select>
-                </div>
-                <div class="flex flex-col justify-end gap-2" style="padding-bottom:2px">
-                    <label class="flex items-center gap-2" style="cursor:pointer">
-                        <input type="checkbox" id="hide-owned" checked onchange="render()" class="card-checkbox">
-                        <span class="text-xs c-gray4 font-bold uppercase">Hide Owned</span>
-                    </label>
-                </div>
+                <div><label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Sort</label><select id="sort-filter" onchange="render()" class="card-select"><option value="easiest">Easiest First</option><option value="hardest">Hardest First</option><option value="name">Alphabetical</option></select></div>
+                <div><label class="block text-10 c-gray5 mb-1 font-bold uppercase tracking-wider">Rarity</label><select id="rarity-filter" onchange="render()" class="card-select"><option value="all">All Rarities</option><option value="extremely_rare">Extremely Rare</option><option value="very_rare">Very Rare</option><option value="rare">Rare</option><option value="limited">Limited</option><option value="uncommon">Uncommon</option><option value="common">Common</option><option value="unknown">Unknown / Unreleased</option></select></div>
+                <div class="flex flex-col justify-end gap-2" style="padding-bottom:2px"><label class="flex items-center gap-2" style="cursor:pointer"><input type="checkbox" id="hide-owned" checked onchange="render()" class="card-checkbox"><span class="text-xs c-gray4 font-bold uppercase">Hide Owned</span></label></div>
             </div>
         </div>
     </div>
-
     <div id="hidden-bar" class="hidden hidden-count"></div>
-    <div id="loader" class="hidden panel" style="padding:2.5rem 0">
-        <div class="loader"></div>
-        <p id="loader-text" class="text-center c-gray5 text-sm font-bold" style="margin-top:1rem">Gathering intel from Torn...</p>
-    </div>
+    <div id="loader" class="hidden panel" style="padding:2.5rem 0"><div class="loader"></div><p id="loader-text" class="text-center c-gray5 text-sm font-bold" style="margin-top:1rem">Gathering intel from Torn...</p></div>
     <div id="merit-list" class="grid grid-1 md-grid-2 lg-grid-3 gap-5"></div>
-    <div id="empty-state" class="hidden text-center panel" style="padding:5rem 0">
-        <div class="text-4xl mb-4 c-666">///</div>
-        <h3 class="text-xl font-bold c-white mb-2 uppercase">Zero Matches</h3>
-        <p class="c-gray5 text-xs uppercase">No targets found matching current filters.</p>
-    </div>
+    <div id="empty-state" class="hidden text-center panel" style="padding:5rem 0"><div class="text-4xl mb-4 c-666">///</div><h3 class="text-xl font-bold c-white mb-2 uppercase">Zero Matches</h3><p class="c-gray5 text-xs uppercase">No targets found matching current filters.</p></div>
 </div>
 
 <script>
-// ═══ HONOR CHAINS (unique names, must be hardcoded) ═══
+// ═══ HONOR BAR IMAGES ═══
+const HBAR={"1337":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/d/d5/608.png/400px-608.png","Various":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/190.png/400px-190.png","Chainer 1":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/06/253.png/400px-253.png","Chainer 2":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/78/255.png/400px-255.png","Chainer 3":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/257.png/400px-257.png","Chainer 4":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c4/475.png/400px-475.png","Chainer 5":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/73/476.png/400px-476.png","Carnage":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/19/256.png/400px-256.png","Massacre":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/477.png/400px-477.png","Genocide":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9a/478.png/400px-478.png","Woodland Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/68/39.png/400px-39.png","Desert Storm Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/4/4d/40.png/400px-40.png","Urban Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c2/41.png/400px-41.png","Arctic Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/3/3d/42.png/400px-42.png","Fall Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1e/43.png/400px-43.png","Yellow Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/8/8b/44.png/400px-44.png","Digital Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/1f/45.png/400px-45.png","Red Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/46.png/400px-46.png","Blue Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/23/47.png/400px-47.png","Orange Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/e7/48.png/400px-48.png","Pink Camo":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/92/49.png/400px-49.png","Lucky Break":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/16/276.png/400px-276.png","Jackpot":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/ee/275.png/400px-275.png","Poker King":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/c3/237.png/400px-237.png","Flatline":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/e/eb/254.png/400px-254.png","Precision":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/07/20.png/400px-20.png","007":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/c/cf/228.png/400px-228.png","Self Defense":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/75/22.png/400px-22.png","Night Walker":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/f/ff/27.png/400px-27.png","Phoenix":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/0/02/317.png/400px-317.png","Pocket Money":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/9e/12.png/400px-12.png","Moneybags":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/1/10/3.png/400px-3.png","Loan Shark":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/6/60/8.png/400px-8.png","Protege":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/b/b7/371.png/400px-371.png","Mile High Club":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/5/59/11.png/400px-11.png","Fresh Start":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/26/288.png/400px-288.png","Historian":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/9/93/845.png/400px-845.png","Driving Elite":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/7/71/21.png/400px-21.png","Candy Man":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/a/a9/25.png/400px-25.png","Fire starter":"https://torn-wiki-uploads.s3.amazonaws.com/thumb/2/24/24.png/400px-24.png"};
+
+// ═══ HONOR CHAINS ═══
 const HONOR_CHAINS=[
 ["Woodland Camo","Desert Storm Camo","Urban Camo","Arctic Camo","Fall Camo","Yellow Camo","Digital Camo","Red Camo","Blue Camo","Orange Camo","Pink Camo"],
 ["Chainer 1","Chainer 2","Chainer 3","Chainer 4","Chainer 5"],
@@ -202,168 +146,174 @@ const HONOR_CHAINS=[
 ["Pocket Money","Green Green Grass"],
 ];
 
-// ═══ AUTO-DETECT MEDAL CHAINS ═══
+// ═══ AUTO MEDAL CHAINS ═══
 const WORD_NUMS=/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|million|billion|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|single|double|triple|quadruple|platinum|diamond|golden|silver|ruby|pearl|coral|tin|copper|bronze|iron|steel|titanium|crystal|paper|cotton|leather|linen|silk|wood|ivory)\b/gi;
 function descTpl(d){let t=d.toLowerCase().trim();t=t.replace(WORD_NUMS,'#');t=t.replace(/[\d,]+/g,'#');t=t.replace(/[#\s]+/g,'#').replace(/^#+|#+$/g,'');return t;}
-function buildMedalChains(medals){
-    const g={};
-    medals.forEach(m=>{const t=descTpl(m.desc);if(t.length<3)return;if(!g[t])g[t]=[];g[t].push(m);});
-    const chains=[];
-    for(const members of Object.values(g)){
-        if(members.length<2)continue;
-        members.sort((a,b)=>(b.circ||0)-(a.circ||0));
-        chains.push(members.map(m=>m.name));
-    }
-    return chains;
-}
+function buildMedalChains(medals){const g={};medals.forEach(m=>{const t=descTpl(m.desc);if(t.length<3)return;if(!g[t])g[t]=[];g[t].push(m);});const chains=[];for(const members of Object.values(g)){if(members.length<2)continue;members.sort((a,b)=>(b.circ||0)-(a.circ||0));chains.push(members.map(m=>m.name));}return chains;}
 
 // ═══ CRIME DETECT ═══
-function crimeVer(d){
-    const l=d.toLowerCase();
-    // Crime 2.0 keywords
-    if(["skill level of 100","bootlegging","graffiti","shoplifting","pickpocket","skimming","burglary","hustling","disposal","cracking","forgery","scamming","rotten food","dead body in acid","password characters","dvd store","police officer","counterfeit","notoriety","confidence trick","sand while search","customers on your online","crew"].some(k=>l.includes(k)))return 2;
-    // Crime 1.0 keywords
-    if(["thefts crimes","drug deals crimes","computer crimes","murders crimes","fraud crimes","auto theft crimes","other\" crimes","selling illegal products","organized crime"].some(k=>l.includes(k)))return 1;
-    // General offense medals (Extortion, Illegal Production, etc.) — Crime 1.0 category
-    if(/commit\s+[\d,]+\s+\w+\s+offenses?/i.test(d))return 1;
-    return null;
-}
+function crimeVer(d){const l=d.toLowerCase();
+if(["skill level of 100","bootlegging","graffiti","shoplifting","pickpocket","skimming","burglary","hustling","disposal","cracking","forgery","scamming","rotten food","dead body in acid","password characters","dvd store","police officer","counterfeit","notoriety","confidence trick","sand while search","customers on your online","crew"].some(k=>l.includes(k)))return 2;
+if(["thefts crimes","drug deals crimes","computer crimes","murders crimes","fraud crimes","auto theft crimes","other\" crimes","selling illegal products","organized crime"].some(k=>l.includes(k)))return 1;
+if(/commit\s+[\d,]+\s+\w+\s+offenses?/i.test(d))return 1;
+return null;}
 
 // ═══ RARITY ═══
-function getRarity(c){
-    if(c==null||c<=0)return{tier:'unknown',label:'Unknown',sort:0};
-    if(c<650)return{tier:'extremely_rare',label:'Extremely Rare',sort:6};
-    if(c<4200)return{tier:'very_rare',label:'Very Rare',sort:5};
-    if(c<10500)return{tier:'rare',label:'Rare',sort:4};
-    if(c<21000)return{tier:'limited',label:'Limited',sort:3};
-    if(c<42000)return{tier:'uncommon',label:'Uncommon',sort:2};
-    return{tier:'common',label:'Common',sort:1};
-}
+function getRarity(c){if(c==null||c<=0)return{tier:'unknown',label:'Unknown',sort:0};
+if(c<650)return{tier:'extremely_rare',label:'Extremely Rare',sort:6};
+if(c<4200)return{tier:'very_rare',label:'Very Rare',sort:5};
+if(c<10500)return{tier:'rare',label:'Rare',sort:4};
+if(c<21000)return{tier:'limited',label:'Limited',sort:3};
+if(c<42000)return{tier:'uncommon',label:'Uncommon',sort:2};
+return{tier:'common',label:'Common',sort:1};}
 
-// ═══ PROGRESS MATCHING ═══
-// Extracts target number from description, matches to user stats
-function getProgress(desc, udata){
-    if(!udata||!desc)return null;
-    const d=desc.toLowerCase();
-    const numM=desc.match(/([\d,]+)/);
-    if(!numM)return null;
-    const target=parseInt(numM[1].replace(/,/g,''));
-    if(!target||target<1)return null;
+// ═══════════════════════════════════════════════════════════════
+// PROGRESS MATCHING — pattern-based, each rule extracts target
+// number from the RIGHT part of the description and maps to a stat.
+// Order matters: specific patterns before generic ones.
+// If a rule matches but returns null stat, no progress is shown.
+// ═══════════════════════════════════════════════════════════════
+const PRULES=[
+// --- SKIP: things we can't track (match first to prevent false positives) ---
+{re:/use a \d+ gauge/i, fn:()=>null},                          // "Use a 12 Gauge..." — item name, not target
+{re:/refer.*level\s+\d+/i, fn:()=>null},                       // referrals — no good API field
+{re:/use\s+[\d,]+\s+(hollow|tracer|incendiary|piercing)/i, fn:()=>null},  // per-ammo-type — no API breakdown
+{re:/use\s+[\d,]+\s+(cannabis|shroom|ecstasy|lsd|vicodin|ketamine|opium|speed|pcp|xanax)/i, fn:()=>null}, // per-drug
+{re:/win.*?russian roulette/i, fn:()=>null},
+{re:/poker score/i, fn:()=>null},
+{re:/win streak.*high.low/i, fn:()=>null},
+{re:/single hit/i, fn:()=>null},                                 // "Deal X damage in a single hit" — best, not cumulative
+{re:/deal exactly/i, fn:()=>null},                               // "Deal exactly 1,337 damage"
+// --- Battle stats ---
+{re:/gain\s+([\d,]+)\s+strength/i, fn:u=>u.battlestats?.strength},
+{re:/gain\s+([\d,]+)\s+defense/i, fn:u=>u.battlestats?.defense},
+{re:/gain\s+([\d,]+)\s+speed/i, fn:u=>u.battlestats?.speed},
+{re:/gain\s+([\d,]+)\s+dexterity/i, fn:u=>u.battlestats?.dexterity},
+{re:/attain\s+([\d,]+)\s+total\s+stat/i, fn:u=>{const b=u.battlestats;return b?(b.strength||0)+(b.defense||0)+(b.speed||0)+(b.dexterity||0):null;}},
+// --- Attacks ---
+{re:/([\d,]+)\s+attacks?\s+won/i, fn:u=>u.personalstats?.attackswon},
+{re:/win\s+([\d,]+)\s+defends?/i, fn:u=>u.personalstats?.defendswon},
+{re:/win\s+([\d,]+)\s+stealthed/i, fn:u=>u.personalstats?.attacksstealthed},
+{re:/win\s+([\d,]+)\s+attacks?\s+and\s+([\d,]+)\s+defends?/i, fn:()=>null}, // compound
+{re:/achieve\s+([\d,]+)\s+hits/i, fn:u=>u.personalstats?.attackhits},
+{re:/([\d,]+)\s+finishing\s+hit/i, fn:u=>u.personalstats?.attackhits},
+{re:/([\d,]+)\s+critical\s+hit/i, fn:u=>u.personalstats?.attackcriticalhits},
+{re:/([\d,]+)\s+one\s+hit\s+kill/i, fn:u=>u.personalstats?.onehitkills},
+{re:/([\d,]+)\s+kill\s+streak/i, fn:u=>u.personalstats?.bestkillstreak},
+{re:/achieve\s+([\d,]+)\s+fist/i, fn:u=>u.personalstats?.attackhits}, // fist finishing hits
+// --- Damage ---
+{re:/([\d,]+)\s+total\s+damage/i, fn:u=>u.personalstats?.attackdamage},
+// --- Rounds ---
+{re:/fire\s+([\d,]+)\s+round/i, fn:u=>u.personalstats?.roundsfired},
+// --- Special ammo total ---
+{re:/use\s+([\d,]+)\s+rounds?\s+of\s+special/i, fn:u=>u.personalstats?.specialammoused},
+// --- Level ---
+{re:/reach\s+level\s+([\d,]+)/i, fn:u=>u.level},
+// --- Marriage (days from description) ---
+{re:/married.*?([\d,]+)\s+days?/i, fn:u=>u.married?.duration},
+{re:/without\s+divorce.*?([\d,]+)\s+days?/i, fn:u=>u.married?.duration},
+{re:/([\d,]+)\s+days?.*without\s+divorce/i, fn:u=>u.married?.duration},
+// --- Travel ---
+{re:/travel\s+([\d,]+)\s+times?/i, fn:u=>u.personalstats?.traveltimes},
+{re:/travel\s+to\s+\w+\s+([\d,]+)\s+times?/i, fn:u=>null}, // per-country, no breakdown
+// --- Bounties ---
+{re:/collect\s+([\d,]+)\s+bount/i, fn:u=>u.personalstats?.bountiescollected},
+// --- Busts ---
+{re:/bust\s+([\d,]+)\s+player/i, fn:u=>u.personalstats?.peoplebusted},
+// --- Bail ---
+{re:/bail\s+([\d,]+)\s+player/i, fn:u=>u.personalstats?.peoplebought},
+// --- Jail ---
+{re:/go\s+to\s+jail\s+([\d,]+)/i, fn:u=>u.personalstats?.jailed},
+// --- Hospital ---
+{re:/go\s+to\s+hospital\s+([\d,]+)/i, fn:u=>u.personalstats?.hospitaltimes},
+// --- Revives ---
+{re:/revive\s+([\d,]+)\s+player/i, fn:u=>u.personalstats?.revives},
+// --- Blood bags ---
+{re:/fill\s+([\d,]+)\s+blood/i, fn:u=>u.personalstats?.bloodwithdrawn},
+// --- Medical items ---
+{re:/([\d,]+)\s+medical\s+item/i, fn:u=>u.personalstats?.medicalitemsused},
+// --- Viruses ---
+{re:/code\s+([\d,]+)\s+virus/i, fn:u=>u.personalstats?.virusescoded},
+// --- Imports ---
+{re:/import\s+([\d,]+)\s+item/i, fn:u=>u.personalstats?.itemsboughtabroad},
+// --- Stalemate ---
+{re:/stalemate\s+([\d,]+)/i, fn:u=>u.personalstats?.attacksdrawn},
+// --- Assist ---
+{re:/assist\s+in\s+([\d,]+)/i, fn:u=>u.personalstats?.attacksassisted},
+// --- Dump ---
+{re:/find\s+([\d,]+)\s+item.*dump/i, fn:u=>u.personalstats?.dumpfinds},
+// --- Trash ---
+{re:/trash\s+([\d,]+)\s+item/i, fn:u=>u.personalstats?.itemstrashed},
+// --- City finds ---
+{re:/find\s+([\d,]+)\s+item.*city/i, fn:u=>u.personalstats?.cityfinds},
+// --- Points sold ---
+{re:/sell\s+([\d,]+)\s+point/i, fn:u=>u.personalstats?.pointssold},
+// --- Job points ---
+{re:/([\d,]+)\s+job\s+point/i, fn:u=>u.personalstats?.jobpointsused},
+// --- Time played ---
+{re:/([\d,]+)\s+hours?\s+of\s+time/i, fn:u=>u.personalstats?.useractivity?Math.floor(u.personalstats.useractivity/3600):null},
+// --- Online days ---
+{re:/online.*?([\d,]+)\s+days?/i, fn:u=>u.personalstats?.activestreak},
+// --- Alcohol/candy/energy ---
+{re:/drink\s+([\d,]+)\s+bottle/i, fn:u=>u.personalstats?.alcoholused},
+{re:/drink\s+([\d,]+)\s+can/i, fn:u=>u.personalstats?.energydrinkused},
+{re:/eat\s+([\d,]+)\s+bag/i, fn:u=>u.personalstats?.candyused},
+// --- Organized crimes ---
+{re:/participate\s+in\s+([\d,]+)\s+organized/i, fn:u=>u.personalstats?.organisedcrimes},
+// --- Missions ---
+{re:/complete\s+([\d,]+)\s+mission/i, fn:u=>u.personalstats?.missionscompleted},
+// --- Education ---
+{re:/complete\s+([\d,]+)\s+education/i, fn:u=>u.personalstats?.educationcompleted},
+// --- Races ---
+{re:/win\s+([\d,]+)\s+race/i, fn:u=>u.personalstats?.raceswon},
+{re:/([\d,]+)\s+wins?\s+in\s+the\s+same\s+car/i, fn:u=>null}, // can't track per-car
+// --- Roulette ---
+{re:/do\s+([\d,]+)\s+spin/i, fn:u=>null},
+// --- Bazaar ---
+{re:/([\d,]+)\s+different\s+customer/i, fn:u=>u.personalstats?.bazaarcustomers},
+// --- Auctions ---
+{re:/win\s+([\d,]+)\s+auction/i, fn:u=>u.personalstats?.auctionswon},
+// --- Awards count ---
+{re:/reach\s+([\d,]+)\s+award/i, fn:u=>null},
+{re:/achieve\s+([\d,]+)\s+total\s+award/i, fn:u=>null},
+// --- Crime offenses (generic "Commit X ___ offenses") ---
+{re:/commit\s+([\d,]+)\s+(\w[\w\s]*?)\s+offense/i, fn:(u,desc)=>{
+    const m=desc.match(/commit\s+[\d,]+\s+(\w[\w\s]*?)\s+offense/i);
+    if(m){const k=m[1].toLowerCase().replace(/\s+/g,'_');return u.criminalrecord?.[k]??null;}return null;}},
+// --- Crime 1.0 categories ---
+{re:/([\d,]+)\s+thefts?\s+crime/i, fn:u=>u.criminalrecord?.theft},
+{re:/([\d,]+)\s+selling\s+illegal/i, fn:u=>u.criminalrecord?.selling_illegal_products},
+{re:/([\d,]+)\s+drug\s+deal/i, fn:u=>u.criminalrecord?.drug_deals},
+{re:/([\d,]+)\s+computer\s+crime/i, fn:u=>u.criminalrecord?.computer_crimes},
+{re:/([\d,]+)\s+murders?\s+crime/i, fn:u=>u.criminalrecord?.murder},
+{re:/([\d,]+)\s+fraud/i, fn:u=>u.criminalrecord?.fraud_crimes},
+{re:/([\d,]+)\s+auto\s+theft/i, fn:u=>u.criminalrecord?.auto_theft},
+{re:/([\d,]+)\s+total\s+crime/i, fn:u=>u.criminalrecord?.total},
+{re:/([\d,]+)\s+"other"\s+crime/i, fn:u=>u.criminalrecord?.other},
+];
 
-    const ps=udata.personalstats||{};
-    const bs=udata.battlestats||{};
-    const pr=udata;
-    const cr=udata.criminalrecord||{};
-    let cur=null;
-
-    // Battle stats
-    if(d.includes('strength')&&!d.includes('strongest'))cur=bs.strength;
-    else if(d.includes('defense')&&!d.includes('self'))cur=bs.defense;
-    else if(d.match(/\bspeed\b/)&&!d.includes('lightspeed'))cur=bs.speed;
-    else if(d.includes('dexterity'))cur=bs.dexterity;
-    else if(d.includes('total stats'))cur=(bs.strength||0)+(bs.defense||0)+(bs.speed||0)+(bs.dexterity||0);
-    // Attacks
-    else if(d.includes('attacks won')||d.includes('attack') && d.includes('won'))cur=ps.attackswon;
-    else if(d.includes('defends')||d.includes('defend'))cur=ps.defendswon;
-    // Level
-    else if(d.includes('reach level'))cur=pr.level;
-    // Marriage
-    else if(d.includes('married')||d.includes('anniversary')||d.includes('without divorce'))cur=pr.married?.duration;
-    // Travel
-    else if(d.includes('travel')&&d.includes('times'))cur=ps.traveltimes;
-    else if(d.includes('travel to')&&d.includes('50'))cur=null; // specific country, harder to track
-    // Rounds fired
-    else if(d.includes('round'))cur=ps.roundsfired;
-    // Critical hits
-    else if(d.includes('critical hit'))cur=ps.attackcriticalhits;
-    // One hit kills
-    else if(d.includes('one hit kill'))cur=ps.onehitkills;
-    // Total damage
-    else if(d.includes('total damage'))cur=ps.attackdamage;
-    // Kill streak
-    else if(d.includes('kill streak'))cur=ps.bestkillstreak;
-    // Bounties
-    else if(d.includes('bounti'))cur=ps.bountiescollected;
-    // Busts
-    else if(d.includes('bust')&&d.includes('player'))cur=ps.peoplebusted;
-    // Bail
-    else if(d.includes('bail'))cur=ps.peoplebought;
-    // Jail
-    else if(d.includes('go to jail'))cur=ps.jailed;
-    // Hospital
-    else if(d.includes('go to hospital'))cur=ps.hospitaltimes;
-    // Revives
-    else if(d.includes('revive')&&d.includes('player'))cur=ps.revives;
-    // Blood bags
-    else if(d.includes('blood bag'))cur=ps.bloodwithdrawn;
-    // Medical items
-    else if(d.includes('medical item'))cur=ps.medicalitemsused;
-    // Viruses
-    else if(d.includes('virus'))cur=ps.virusescoded;
-    // Import items
-    else if(d.includes('import'))cur=ps.itemsboughtabroad;
-    // Stalemate
-    else if(d.includes('stalemate'))cur=ps.attacksdrawn;
-    // Assisted attacks
-    else if(d.includes('assist'))cur=ps.attacksassisted;
-    // Finishing hits (generic)
-    else if(d.includes('finishing hit'))cur=ps.attackhits;
-    // Items in dump
-    else if(d.includes('items in dump')||d.includes('item') && d.includes('dump'))cur=ps.dumpfinds;
-    // Trash items
-    else if(d.includes('trash'))cur=ps.itemstrashed;
-    // City finds
-    else if(d.includes('items in the city')||d.includes('find')&&d.includes('city'))cur=ps.cityfinds;
-    // Points sold
-    else if(d.includes('sell')&&d.includes('point'))cur=ps.pointssold;
-    // Online days
-    else if(d.includes('online')&&d.includes('day'))cur=ps.activestreak;
-    // Education courses
-    else if(d.includes('education course'))cur=ps.educationcompleted;
-    // Crimes - general offense medals
-    else if(d.includes('extortion offense'))cur=cr.extortion;
-    else if(d.includes('illegal production'))cur=cr.illegal_production;
-    else if(d.includes('theft')&&d.includes('crime'))cur=cr.theft;
-    else if(d.includes('selling illegal'))cur=cr.selling_illegal_products;
-    else if(d.includes('drug deal'))cur=cr.drug_deals;
-    else if(d.includes('computer crime'))cur=cr.computer_crimes;
-    else if(d.includes('murder')&&d.includes('crime'))cur=cr.murder;
-    else if(d.includes('fraud'))cur=cr.fraud_crimes||cr.fraud;
-    else if(d.includes('auto theft'))cur=cr.auto_theft;
-    else if(d.includes('total crime'))cur=cr.total;
-    // Generic "commit X ___ offenses"
-    else if(/commit\s+[\d,]+\s+(\w+)\s+offense/i.test(desc)){
-        const offType=desc.match(/commit\s+[\d,]+\s+(\w[\w\s]*?)\s+offense/i);
-        if(offType){
-            const key=offType[1].toLowerCase().replace(/\s+/g,'_');
-            if(cr[key]!=null)cur=cr[key];
+function getProgress(desc,ud){
+    if(!ud||!desc)return null;
+    for(const r of PRULES){
+        const m=desc.match(r.re);
+        if(m){
+            const numStr=m[1];
+            if(!numStr)return null; // matched skip-pattern
+            const target=parseInt(numStr.replace(/,/g,''));
+            if(!target||target<1)return null;
+            const cur=r.fn(ud,desc);
+            if(cur!=null&&!isNaN(cur))return{current:cur,target,pct:Math.min(100,Math.round(cur/target*100))};
+            return null;
         }
-    }
-    // Attacks won (for camo medals with just "X Attacks Won")
-    else if(d.includes('attacks won'))cur=ps.attackswon;
-    // Time played
-    else if(d.includes('hours')&&(d.includes('played')||d.includes('time')))cur=ps.useractivity?Math.floor(ps.useractivity/3600):null;
-    // Job points
-    else if(d.includes('job point'))cur=ps.jobpointsused;
-    // Energy/nerve refills
-    else if(d.includes('energy refill'))cur=ps.refills?.energy_refills;
-    else if(d.includes('nerve refill'))cur=ps.refills?.nerve_refills;
-    // Drink/eat/use
-    else if(d.includes('bottles of alcohol')||d.includes('alcohol'))cur=ps.alcoholused;
-    else if(d.includes('candy')||d.includes('bags of candy'))cur=ps.candyused;
-    else if(d.includes('energy drink'))cur=ps.energydrinkused;
-
-    if(cur!=null&&!isNaN(cur)){
-        return{current:cur,target:target,pct:Math.min(100,Math.round((cur/target)*100))};
     }
     return null;
 }
 
 // ═══ STATE ═══
 let ALL=[],OWNED=new Set(),CATS=new Set(),ALL_CHAINS=[],CHAIN_LK={},UDATA=null;
-let PREFS=JSON.parse(localStorage.getItem('mhV7'))||{hidden:[]};
-function saveP(){localStorage.setItem('mhV7',JSON.stringify(PREFS));render();}
-function saveQ(){localStorage.setItem('mhV7',JSON.stringify(PREFS));}
+let PREFS=JSON.parse(localStorage.getItem('mhV8'))||{hidden:[]};
+function saveP(){localStorage.setItem('mhV8',JSON.stringify(PREFS));render();}
+function saveQ(){localStorage.setItem('mhV8',JSON.stringify(PREFS));}
 function cap(s){return!s?'Misc':s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();}
 function show(id){document.getElementById(id).classList.remove('hidden');}
 function hide(id){document.getElementById(id).classList.add('hidden');}
@@ -377,7 +327,6 @@ async function fetchAll(){
     const btn=document.getElementById('fetch-btn');
     btn.disabled=true;btn.textContent='Fetching...';
     const lt=document.getElementById('loader-text');
-
     try{
         lt.textContent='Fetching honors & medals...';
         const[tH,uH,tM,uM]=await Promise.all([
@@ -388,60 +337,39 @@ async function fetchAll(){
         ]);
         if(tH.error)throw new Error(tH.error.error);
 
-        // Fetch user stats for progress tracking (V1 combined call)
-        lt.textContent='Fetching your stats for progress...';
-        try{
-            UDATA=await fetch(`https://api.torn.com/user/?selections=personalstats,battlestats,profile,criminalrecord&key=${key}`).then(r=>r.json());
-            if(UDATA.error){console.warn('Stats fetch limited:',UDATA.error.error);UDATA=null;}
-        }catch(e){console.warn('Stats fetch failed:',e);UDATA=null;}
+        lt.textContent='Fetching your stats...';
+        try{UDATA=await fetch(`https://api.torn.com/user/?selections=personalstats,battlestats,profile,criminalrecord&key=${key}`).then(r=>r.json());if(UDATA.error){console.warn(UDATA.error.error);UDATA=null;}}catch(e){console.warn(e);UDATA=null;}
 
         const oh=(uH.honors||[]).map(h=>'honor_'+(typeof h==='object'?h.id:h));
         const om=(uM.medals||[]).map(m=>'medal_'+(typeof m==='object'?m.id:m));
         OWNED=new Set([...oh,...om]);
 
-        const honors=(tH.honors||[]).filter(h=>{
-            const t=(h.type&&h.type.title)?h.type.title.toLowerCase():'';
-            return t!=='default';
-        }).map(h=>build(h,'honor'));
+        const honors=(tH.honors||[]).filter(h=>{const t=(h.type?.title||'').toLowerCase();return t!=='default';}).map(h=>build(h,'honor'));
         const medals=(tM.medals||[]).map(m=>build(m,'medal'));
         ALL=[...honors,...medals];
         CATS=new Set(ALL.map(m=>m.category));
 
-        // Build chains
-        lt.textContent='Building progression chains...';
-        const autoChains=buildMedalChains(medals);
-        ALL_CHAINS=[...HONOR_CHAINS,...autoChains];
+        lt.textContent='Building chains...';
+        const ac=buildMedalChains(medals);
+        ALL_CHAINS=[...HONOR_CHAINS,...ac];
         CHAIN_LK={};
         ALL_CHAINS.forEach((ch,ci)=>ch.forEach((n,pos)=>{CHAIN_LK[n.toLowerCase()]={ci,pos,len:ch.length};}));
         ALL.forEach(m=>{m.chain=CHAIN_LK[m.name.toLowerCase()]||null;});
 
-        // Auto-hide very common defaults (200k+ circ, not owned)
-        ALL.forEach(m=>{
-            if(m.circ&&m.circ>200000&&!PREFS.hidden.includes(m.uid)&&!OWNED.has(m.uid)){
-                PREFS.hidden.push(m.uid);
-            }
-        });
+        ALL.forEach(m=>{if(m.circ&&m.circ>200000&&!PREFS.hidden.includes(m.uid)&&!OWNED.has(m.uid))PREFS.hidden.push(m.uid);});
         saveQ();
 
-        populateFilters();
-        show('filters-area');
-        render();
+        populateFilters();show('filters-area');render();
     }catch(e){console.error(e);alert('API Error: '+e.message);}
     finally{hide('loader');btn.disabled=false;btn.textContent='Initialize Scan';}
 }
 
-function build(item,type){
-    const circ=item.circulation!=null?item.circulation:null;
-    return{uid:type+'_'+item.id,id:item.id,name:item.name,desc:item.description||'',
-        category:type==='medal'?'Medal':cap(item.type?item.type.title:'Misc'),
-        awardType:type,circ:circ,rar:getRarity(circ),cv:crimeVer(item.description||''),chain:null};
-}
+function build(item,type){const circ=item.circulation!=null?item.circulation:null;
+return{uid:type+'_'+item.id,id:item.id,name:item.name,desc:item.description||'',
+category:type==='medal'?'Medal':cap(item.type?item.type.title:'Misc'),
+awardType:type,circ:circ,rar:getRarity(circ),cv:crimeVer(item.description||''),chain:null};}
 
-function populateFilters(){
-    const s=document.getElementById('cat-filter');
-    s.innerHTML='<option value="all">All Categories</option>';
-    Array.from(CATS).sort().forEach(c=>{s.innerHTML+=`<option value="${c}">${c}</option>`;});
-}
+function populateFilters(){const s=document.getElementById('cat-filter');s.innerHTML='<option value="all">All Categories</option>';Array.from(CATS).sort().forEach(c=>{s.innerHTML+=`<option value="${c}">${c}</option>`;});}
 function toggleHide(uid){const i=PREFS.hidden.indexOf(uid);if(i>-1)PREFS.hidden.splice(i,1);else PREFS.hidden.push(uid);saveP();}
 function unhideAll(){PREFS.hidden=[];saveP();}
 
@@ -455,21 +383,12 @@ function render(){
     const crf=document.getElementById('crime-filter').value;
     const rf=document.getElementById('rarity-filter').value;
 
-    // Chain next-needed (always on)
     const cn={};
-    ALL_CHAINS.forEach((ch,ci)=>{
-        let p=-1;
-        for(let i=0;i<ch.length;i++){
-            const m=ALL.find(x=>x.name.toLowerCase()===ch[i].toLowerCase());
-            if(m&&!OWNED.has(m.uid)){p=i;break;}
-        }
-        cn[ci]=p;
-    });
+    ALL_CHAINS.forEach((ch,ci)=>{let p=-1;for(let i=0;i<ch.length;i++){const m=ALL.find(x=>x.name.toLowerCase()===ch[i].toLowerCase());if(m&&!OWNED.has(m.uid)){p=i;break;}}cn[ci]=p;});
 
     const hc=PREFS.hidden.length;
     const hb=document.getElementById('hidden-bar');
-    if(hc>0){hb.innerHTML=`${hc} award${hc!==1?'s':''} hidden &middot; <button onclick="unhideAll()">Unhide all</button>`;show('hidden-bar');}
-    else hide('hidden-bar');
+    if(hc>0){hb.innerHTML=`${hc} award${hc!==1?'s':''} hidden &middot; <button onclick="unhideAll()">Unhide all</button>`;show('hidden-bar');}else hide('hidden-bar');
 
     let f=ALL.filter(m=>{
         if(PREFS.hidden.includes(m.uid))return false;
@@ -480,35 +399,20 @@ function render(){
         if(crf==='crime1'&&m.cv!==1)return false;
         if(crf==='crime2'&&m.cv!==2)return false;
         if(crf==='nocrime'&&m.cv!==null)return false;
-        // Chain collapse: only show next needed stage
-        if(m.chain){
-            const nd=cn[m.chain.ci];
-            if(nd===-1)return false;
-            if(m.chain.pos!==nd)return false;
-        }
+        if(m.chain){const nd=cn[m.chain.ci];if(nd===-1)return false;if(m.chain.pos!==nd)return false;}
         return true;
     });
 
-    // Sort — treat 0/null circulation as "unranked", push to bottom for easiest, top for hardest
-    const circVal=m=>(m.circ&&m.circ>0)?m.circ:null;
+    const cv=m=>(m.circ&&m.circ>0)?m.circ:null;
     f.sort((a,b)=>{
         if(sf==='name')return a.name.localeCompare(b.name);
-        const ca=circVal(a),cb=circVal(b);
-        if(sf==='easiest'){
-            if(ca===null&&cb===null)return a.name.localeCompare(b.name);
-            if(ca===null)return 1;if(cb===null)return-1;
-            return cb-ca;
-        }
-        if(sf==='hardest'){
-            if(ca===null&&cb===null)return a.name.localeCompare(b.name);
-            if(ca===null)return 1;if(cb===null)return-1;
-            return ca-cb;
-        }
+        const ca=cv(a),cb=cv(b);
+        if(sf==='easiest'){if(ca===null&&cb===null)return a.name.localeCompare(b.name);if(ca===null)return 1;if(cb===null)return-1;return cb-ca;}
+        if(sf==='hardest'){if(ca===null&&cb===null)return a.name.localeCompare(b.name);if(ca===null)return 1;if(cb===null)return-1;return ca-cb;}
         return 0;
     });
 
-    if(!f.length){show('empty-state');list.innerHTML='';return;}
-    else hide('empty-state');
+    if(!f.length){show('empty-state');list.innerHTML='';return;}else hide('empty-state');
 
     let h='';
     f.forEach(m=>{
@@ -516,59 +420,40 @@ function render(){
         const dim=owned?'opacity-40 grayscale':'';
         const circStr=m.circ!=null&&m.circ>0?m.circ.toLocaleString()+' in circulation':'Unreleased / No data';
 
-        const medalIcon=m.awardType==='medal'
-            ?`<div style="width:44px;height:44px;background:#111;border:1px solid #333;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:4px;margin-right:10px;flex-shrink:0"><img src="https://www.torn.com/images/awards/medals/${m.id}.png" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.style.display='none'"></div>`
-            :'';
+        const medalIcon=m.awardType==='medal'?`<div style="width:44px;height:44px;background:#111;border:1px solid #333;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:4px;margin-right:10px;flex-shrink:0"><img src="https://www.torn.com/images/awards/medals/${m.id}.png" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.style.display='none'"></div>`:'';
 
-        // Stage indicator + progress
-        let stageHtml='';
-        if(m.chain){
-            const ch=ALL_CHAINS[m.chain.ci];
-            if(ch)stageHtml=`<span class="font-mono text-9 c-666 uppercase tracking-wider">Stage ${m.chain.pos+1}/${ch.length}</span>`;
-        }
+        // Honor bar image
+        const barImg=HBAR[m.name];
+        const barHtml=barImg?`<img src="${barImg}" class="honor-bar" onerror="this.style.display='none'">`:'';
 
-        // Progress bar from user stats
+        // Stage label
+        let stageLabel='';
+        if(m.chain){const ch=ALL_CHAINS[m.chain.ci];if(ch)stageLabel=`<span class="font-mono text-9 c-666 uppercase tracking-wider">Stage ${m.chain.pos+1}/${ch.length}</span>`;}
+
+        // Progress from user stats
         let progressHtml='';
         const prog=getProgress(m.desc,UDATA);
         if(prog){
-            const curStr=prog.current.toLocaleString();
-            const tgtStr=prog.target.toLocaleString();
-            progressHtml=`<div class="progress-wrap">
-                <div class="flex justify-between items-center">
-                    ${stageHtml}
-                    <span class="font-mono text-9 c-white">${curStr} <span class="c-555">/ ${tgtStr}</span> <span class="c-666">(${prog.pct}%)</span></span>
-                </div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${prog.pct}%"></div></div>
-            </div>`;
-        } else if(stageHtml){
-            // Show stage even without progress
-            progressHtml=`<div class="progress-wrap"><div class="flex justify-between items-center">${stageHtml}<span class="font-mono text-9 c-555">progress unavailable</span></div><div class="chain-bar"><div class="chain-fill" style="width:0%"></div></div></div>`;
+            progressHtml=`<div class="progress-wrap"><div class="flex justify-between items-center">${stageLabel}<span class="font-mono text-9 c-white">${prog.current.toLocaleString()} <span class="c-555">/ ${prog.target.toLocaleString()}</span> <span class="c-666">(${prog.pct}%)</span></span></div><div class="progress-bar"><div class="progress-fill" style="width:${prog.pct}%"></div></div></div>`;
+        } else if(stageLabel){
+            // Show stage label only — no "progress unavailable" text
+            progressHtml=`<div style="margin-top:10px;padding-top:8px;border-top:1px solid #222">${stageLabel}</div>`;
         }
 
         h+=`<div class="torn-card rarity-${m.rar.tier} ${dim} shadow-lg">
             <div class="accent-bar"></div>
             <div class="p-5 grow">
                 <div class="flex justify-between items-start border-b-333 pb-3 mb-3">
-                    <div class="flex items-center">
-                        ${medalIcon}
-                        <div>
-                            <span class="font-mono text-10 c-666 font-bold block mb-1 uppercase">${m.awardType}: ${m.id}</span>
-                            <span class="text-10 font-bold uppercase" style="padding:2px 6px;background:#333;color:#ccc;border-radius:3px">${m.category}</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-end">
-                        <span class="rarity-badge font-bold">${m.rar.label}</span>
-                        <span class="font-mono text-10 c-666 mt-2">${circStr}</span>
-                    </div>
+                    <div class="flex items-center">${medalIcon}<div><span class="font-mono text-10 c-666 font-bold block mb-1 uppercase">${m.awardType}: ${m.id}</span><span class="text-10 font-bold uppercase" style="padding:2px 6px;background:#333;color:#ccc;border-radius:3px">${m.category}</span></div></div>
+                    <div class="flex flex-col items-end"><span class="rarity-badge font-bold">${m.rar.label}</span><span class="font-mono text-10 c-666 mt-2">${circStr}</span></div>
                 </div>
                 <h3 class="text-lg font-bold c-white tracking-tight leading-tight">${m.name}</h3>
+                ${barHtml}
                 <p class="text-11 c-999 mt-2 leading-relaxed border-l-2 pl-3">${m.desc}</p>
                 ${progressHtml}
             </div>
             <div style="background:#111;padding:12px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #333">
-                ${owned
-                    ?'<span class="text-10 font-bold uppercase tracking-wider flex items-center gap-1" style="color:#16a34a"><span class="dot pulse" style="background:#16a34a"></span> ACHIEVED</span>'
-                    :'<span class="text-10 font-bold uppercase tracking-wider flex items-center gap-1" style="color:#b91c1c"><span class="dot" style="background:#b91c1c"></span> LOCKED</span>'}
+                ${owned?'<span class="text-10 font-bold uppercase tracking-wider flex items-center gap-1" style="color:#16a34a"><span class="dot pulse" style="background:#16a34a"></span> ACHIEVED</span>':'<span class="text-10 font-bold uppercase tracking-wider flex items-center gap-1" style="color:#b91c1c"><span class="dot" style="background:#b91c1c"></span> LOCKED</span>'}
                 <button onclick="toggleHide('${m.uid}')" class="btn-sm" style="background:#1a1a1a;color:#888;border:1px solid #333;border-radius:4px;cursor:pointer;transition:color .2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">HIDE</button>
             </div>
         </div>`;
